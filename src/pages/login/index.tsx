@@ -6,10 +6,11 @@ import passwordIcon from '../../assets/password_icon.svg';
 import { LoginContainer, MainContainer } from './styles';
 import Link from 'next/link';
 import useLogin from './hook';
+import { Toast } from 'react-bootstrap';
 
 const Login: React.FC = () => {
 
-  const { inputEmail, inputPassword, handleLogin } = useLogin();
+  const { inputEmail, inputPassword, toast, handleLogin } = useLogin();
 
   return (
     <>
@@ -17,6 +18,24 @@ const Login: React.FC = () => {
         <Image src={logo} alt='Logo da v8' width={200} height={110}/>
       </div>
       <MainContainer>
+      <Toast
+            onClose={() => toast.show.set(false)}
+            show={toast.show.value}
+            delay={3000}
+            autohide
+            style={{
+                position: 'fixed',
+                top: 20,
+                right: 20,
+                zIndex: 9999,
+            }}
+            bg={toast.type === "success" ? "success" : "danger"}
+        >
+            <Toast.Header>
+                <strong className="me-auto">{toast.type === "success" ? "Success" : "Error"}</strong>
+            </Toast.Header>
+            <Toast.Body>{toast.message}</Toast.Body>
+        </Toast>
         <LoginContainer>
           <h1>Seja bem-vindo!</h1>
           <h2>Preencha suas credenciais</h2>
@@ -33,7 +52,7 @@ const Login: React.FC = () => {
             Senha:
             <div className="input-group flex-nowrap">
               <span className="input-group-text" id="addon-wrapping"><Image src={passwordIcon} width={24} height={20} alt='icone senha' /></span>
-              <input value={inputPassword.value} onChange={e => inputPassword.handle(e.currentTarget.value)} id="password" type="text" className="form-control" placeholder="Senha" aria-label="Senha" aria-describedby="addon-wrapping" />
+              <input value={inputPassword.value} onChange={e => inputPassword.handle(e.currentTarget.value)} id="password" type="password" className="form-control" placeholder="Senha" aria-label="Senha" aria-describedby="addon-wrapping" />
             </div>
           </label>
 
@@ -42,7 +61,7 @@ const Login: React.FC = () => {
           </div>
 
           <div className="btn-login">
-            <button type="button" className="btn btn-danger" onClick={() => handleLogin}>Entrar</button>
+            <button type="button" className="btn btn-danger" onClick={handleLogin}>Entrar</button>
           </div>
         </LoginContainer>
       </MainContainer>

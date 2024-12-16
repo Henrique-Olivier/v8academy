@@ -1,25 +1,39 @@
-import { supabase } from "../../config/supabase";
+import { supabase } from "../../service/supabase";
 import { useState } from "react";
 
 
 export default function useLogin() {
     const [inputEmail, setInputEmail] = useState("");
     const [inputPassword, setInputPassword] = useState("");
+
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
+    const [toastType, setToastType] = useState("success");
+
+    function showNotification(message: string, duration: number, type: "error" | "success") {
+        setToastMessage(message);
+        setToastType(type);
+        setShowToast(true);
+        setTimeout(() => {
+            setShowToast(false);
+        }, duration);
+    }
     
     async function handleLogin() {
         if(inputEmail === "" || inputPassword === "") {
-            alert("Preencha todos os campos");
+            showNotification("Preencha todos os campos", 3000, "error");
         } else {
             try {
                 const { data, error } = await supabase.auth.signInWithPassword({ email: inputEmail, password: inputPassword});
 
-                if(data) {
-                    alert("login feito com sucesso!");
+                if(data.user) {
+                    console.log(data)
+                    showNotification("Login realizado com sucesso", 3000, "success");
                     return;
                 }
 
                 if(error) {
-                    alert("login não efetuado!")
+                    showNotification(error.message, 3000, "error");
                     return;
                 }
             } catch (error) {
@@ -37,6 +51,14 @@ export default function useLogin() {
             value: inputPassword,
             handle: setInputPassword
         },
-        handleLogin: handleLogin
+        handleLogin: handleLogin,
+        toast: {
+            show: {
+                value: showToast,
+                set: setShowToast
+            },
+            message: toastMessage,
+            type: toastType
+        }
     };
 }

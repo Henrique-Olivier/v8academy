@@ -8,7 +8,7 @@ export const MainContainer = styled.div`
 
 export const LoginContainer = styled.div`
     width: 450px;
-    height: 530px;
+    height: min-content;
     background-color: #F8F9FA;
     padding: 50px 30px;
 
