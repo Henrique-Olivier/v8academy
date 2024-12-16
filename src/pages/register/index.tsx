@@ -230,7 +230,7 @@ export default function Register() {
                 <GoToLogin onClick={() => router.push('/login')}>Já tem uma conta? Faça login</GoToLogin>
 
                 <Button variant="danger" type="submit" onClick={signUp}>
-                    Submit
+                    Cadastrar
                 </Button>
 
             </BoxForm>
