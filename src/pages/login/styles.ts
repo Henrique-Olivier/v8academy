@@ -11,6 +11,8 @@ export const LoginContainer = styled.div`
     height: min-content;
     background-color: #F8F9FA;
     padding: 50px 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px 0 rgb(000, 000, 000, 0.2);
 
     h1{
         font-size: 36px;
