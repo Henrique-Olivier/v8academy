@@ -6,9 +6,10 @@ import { Button } from "react-bootstrap";
 import { useState } from "react";
 import { supabase } from "@/service/supabase";
 import Toast from 'react-bootstrap/Toast';
+import { useRouter } from 'next/router';
 
 
-const Container = styled.div`
+const BodyContainer = styled.div`
     width: 100%;
     height: 97vh;
     background-color: #fff;
@@ -42,6 +43,14 @@ margin: 0;
 font-size: 24px;
 `
 
+const GoToLogin = styled.button`
+background: none;
+border: none;
+color: #2D71D6;
+text-align: start;
+margin-bottom: 10px;
+`
+
 export default function Register() {
 
     const [name, setName] = useState("");
@@ -52,6 +61,7 @@ export default function Register() {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
     const [toastType, setToastType] = useState("success");
+    const router = useRouter();
 
     async function signUp() {
 
@@ -101,7 +111,9 @@ export default function Register() {
 
 
             showNotification("Usuário cadastrado com sucesso", 3000, "success");
-
+            setTimeout(() => {
+                router.push('/login');
+            }, 3000);
         }
 
     }
@@ -166,7 +178,7 @@ export default function Register() {
     }
 
     return (
-        <Container>
+        <BodyContainer>
             <>
                 <Toast
                     onClose={() => setShowToast(false)}
@@ -215,12 +227,13 @@ export default function Register() {
                     <Form.Control value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} type="password" placeholder="Confirme sua senha" />
                 </Form.Group>
 
+                <GoToLogin onClick={() => router.push('/login')}>Já tem uma conta? Faça login</GoToLogin>
 
                 <Button variant="danger" type="submit" onClick={signUp}>
                     Submit
                 </Button>
 
             </BoxForm>
-        </Container>
+        </BodyContainer>
     );
 }
