@@ -3,6 +3,7 @@ import { MainContainer } from "./styles";
 import searchIcon from "../../assets/search_icon.svg";
 import { ITrails } from "./types";
 import useTrails from "./hooks";
+import Layout from "@/components/Layout";
 
 export default function Trails() {
 
@@ -22,19 +23,21 @@ export default function Trails() {
     }
 
     return (
-        <MainContainer>
-            <h1>Todas as trilhas</h1>
+        <Layout>
+            <MainContainer>
+                <h1>Todas as trilhas</h1>
 
-            <div className="search">
-                <div className="input-group flex-nowrap">
-                    <input type="text" className="form-control" placeholder="Search..." aria-label="Username" aria-describedby="addon-wrapping" />
-                    <span className="input-group-text" id="addon-wrapping"><Image src={searchIcon} alt="Icon de procura" /></span>
+                <div className="search">
+                    <div className="input-group flex-nowrap">
+                        <input type="text" className="form-control" placeholder="Search..." aria-label="Username" aria-describedby="addon-wrapping" />
+                        <span className="input-group-text" id="addon-wrapping"><Image src={searchIcon} alt="Icon de procura" /></span>
+                    </div>
                 </div>
-            </div>
 
-            <div className="cards">
-                {showTrials(listTrails)}
-            </div>
-        </MainContainer>
+                <div className="cards">
+                    {showTrials(listTrails)}
+                </div>
+            </MainContainer>
+        </Layout>
     );
 }
