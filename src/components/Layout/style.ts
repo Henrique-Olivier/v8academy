@@ -48,3 +48,13 @@ export const DivLine = styled.div<{$hasTopBorder?: boolean}>`
     align-items: center;
     cursor: pointer;      
 `
+
+export const LogoutButton = styled.button`
+    border: 1px solid red;
+    padding: 5px 20px;
+    border-radius: 2px;
+    margin-top: auto;
+    margin-bottom: 35px;
+    color: red;
+    text-align: start;
+`
