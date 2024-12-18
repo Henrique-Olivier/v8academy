@@ -11,14 +11,16 @@ export default function Trails() {
 
     function showTrials(listTrails: ITrails[]) {
         return listTrails.map(item => (
-            <div className="card" id={item.id.toString()}>
-                <img src="https://bfogzwmikqkepnhxrjyt.supabase.co/storage/v1/object/public/v8academy-images/imagem_teste.jpg" className="card-img-top" alt="..." />
-                <div className="card-body">
-                    <h5 className="card-title">{item.titulo}</h5>
-                    <p className="card-text">{item.descricao}</p>
-                    <a href="#" className="btn btn-primary">Ver cursos</a>
+            <>
+                <div className="card" id={item.id.toString()}>
+                    <img src="https://bfogzwmikqkepnhxrjyt.supabase.co/storage/v1/object/public/v8academy-images/imagem_teste.jpg" className="card-img-top" alt="..." />
+                    <div className="card-body">
+                        <h5 className="card-title">{item.titulo}</h5>
+                        <p className="card-text">{item.descricao}</p>
+                        <a href="#" className="btn btn-primary">Ver cursos</a>
+                    </div>
                 </div>
-            </div>
+            </>
         ))
     }
 

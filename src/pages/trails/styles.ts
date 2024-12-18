@@ -1,10 +1,12 @@
 import styled from "styled-components";
 
 export const MainContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    padding: 55px 25px;
+display: flex;
+flex-direction: column;
+gap: 40px;
+padding: 55px 25px;
+overflow-x: auto;
+max-height: 100%;
 
     h1{
         font-size: 34px;
@@ -25,6 +27,7 @@ export const MainContainer = styled.div`
         display: flex;
         flex-wrap: wrap;
         gap: 5%;
+        row-gap: 20px;
     }
 
     div.card{
