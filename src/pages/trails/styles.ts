@@ -4,7 +4,7 @@ export const MainContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 40px;
-    padding: 75px 25px;
+    padding: 55px 25px;
 
     h1{
         font-size: 34px;
@@ -24,11 +24,10 @@ export const MainContainer = styled.div`
     div.cards{
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
-        row-gap: 35px;
+        gap: 5%;
     }
 
     div.card{
-        width: 18rem;
+        width: 30%;
     }
 `;
