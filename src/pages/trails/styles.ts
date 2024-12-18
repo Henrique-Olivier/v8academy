@@ -7,7 +7,7 @@ export const MainContainer = styled.div`
     padding: 75px 25px;
 
     h1{
-        font-size: 44px;
+        font-size: 34px;
         font-weight: 500;
         width: 100%;
         border-bottom: 1px solid #4E4E4E;
