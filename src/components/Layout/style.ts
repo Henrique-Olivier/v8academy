@@ -11,7 +11,7 @@ height: 100vh;
 `
 
 export const SidebarContainer = styled.div`
-    width: 22%;
+    width: 18%;
     height: 100vh;
     background-color: #F8F9FA;
     display: flex;
