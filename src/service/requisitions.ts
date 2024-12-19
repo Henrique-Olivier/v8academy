@@ -1,7 +1,7 @@
 import { supabase } from "./supabase";
 import { ITrails } from "../pages/trails/types";
 
-export default async function getTrails() {
+export async function getTrails() {
     const { data } = await supabase.from("trilha").select();
 
     if(data) {
@@ -14,6 +14,19 @@ export default async function getTrails() {
         });
 
         return trails;
+    }
+
+    return [];
+}
+
+export async function getLessons(idCourse: string | string[]) {
+    const { data } = await supabase.from("aula")
+        .select("idAula, titulo, modulo!inner(titulo)")
+        .eq('modulo.fkCurso', idCourse)
+
+    if(data) {
+        console.log(data)
+        return data
     }
 
     return [];
