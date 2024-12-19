@@ -30,4 +30,10 @@ export const AccordionContainer = styled.div`
         font-size: 16px;
     }
 
+    div.lesson{
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+    }
+
 `;
