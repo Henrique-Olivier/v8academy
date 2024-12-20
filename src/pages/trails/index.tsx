@@ -4,20 +4,24 @@ import searchIcon from "../../assets/search_icon.svg";
 import { ITrails } from "./types";
 import useTrails from "./hooks";
 import Layout from "@/components/Layout";
+import { useRouter } from "next/router";
 
 export default function Trails() {
 
     const { listTrails } = useTrails();
+    const router = useRouter();
 
     function showTrials(listTrails: ITrails[]) {
         return listTrails.map(item => (
             <>
-                <div className="card" id={item.id.toString()}>
+                <div className="card" key={item.id}>
                     <img src="https://bfogzwmikqkepnhxrjyt.supabase.co/storage/v1/object/public/v8academy-images/imagem_teste.jpg" className="card-img-top" alt="..." />
                     <div className="card-body">
                         <h5 className="card-title">{item.titulo}</h5>
                         <p className="card-text">{item.descricao}</p>
-                        <a href={`/courses/${item.id}`} className="btn btn-primary">Ver cursos</a>
+                        <a className="btn btn-primary" data-idtrail={item.id} onClick={()=> {
+                            router.push(`/courses/${item.id}`)
+                        }}> Ver cursos</a>
                     </div>
                 </div>
             </>

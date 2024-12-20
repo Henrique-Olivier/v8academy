@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { supabase } from "../../service/supabase";
 import { useState } from "react";
 
@@ -9,6 +10,8 @@ export default function useLogin() {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
     const [toastType, setToastType] = useState("success");
+
+    const router = useRouter();
 
     function showNotification(message: string, duration: number, type: "error" | "success") {
         setToastMessage(message);
@@ -29,6 +32,9 @@ export default function useLogin() {
                 if(data.user) {
                     console.log(data)
                     showNotification("Login realizado com sucesso", 3000, "success");
+                    setTimeout(() => {
+                        router.push("/trails")
+                    }, 1500);
                     return;
                 }
 

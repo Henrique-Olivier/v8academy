@@ -19,7 +19,7 @@ max-height: 100%;
         width: 60%;
 
         div > span{
-            background-color: blue;
+            background-color: #2D71D6;
         }
     }
 
