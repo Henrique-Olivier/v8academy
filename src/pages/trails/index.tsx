@@ -19,7 +19,7 @@ export default function Trails() {
                     <div className="card-body">
                         <h5 className="card-title">{item.titulo}</h5>
                         <p className="card-text">{item.descricao}</p>
-                        <a href="#" className="btn btn-primary" data-idtrail={item.id.toString()} onClick={()=> {
+                        <a className="btn btn-primary" data-idtrail={item.id} onClick={()=> {
                             router.push(`/courses/${item.id}`)
                         }}> Ver cursos</a>
                     </div>

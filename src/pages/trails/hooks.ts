@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { ITrails } from "./types";
-import getTrails from "@/service/requisitions";
+import { getTrails } from "@/service/requisitions";
 
 export default function useTrails() {
     const [listTrails, setListTrails] = useState<ITrails[]>([]);

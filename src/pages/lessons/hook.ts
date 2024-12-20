@@ -24,7 +24,7 @@ export default function useLessons() {
           return
         }
   
-        if (data) {
+        if (data && data.length !== 0) {
           console.log(data)
           setCourse(data[0].titulo)
         }
@@ -44,7 +44,7 @@ export default function useLessons() {
           return
         }
   
-        if (data) {
+        if (data && data.length !== 0) {
           console.log(data);
           setTrail(data[0].titulo);
         }

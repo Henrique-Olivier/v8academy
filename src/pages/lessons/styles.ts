@@ -36,8 +36,16 @@ export const AccordionContainer = styled.div`
 
     div.lesson{
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
         align-items: baseline;
+        gap: 15px;
+
+        div{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
     }
 
 `;
