@@ -8,33 +8,55 @@ export default function useLessons() {
     const [listModulesGroups, setListModulesGroups] = useState<{modulo: string, aulas: ILessons[] }[]>([]);
     const [countModulesAndLessons, setCountModulesAndLessons] = useState<{modulos: number, aulas: number}>();
     const [course, setCourse] = useState("");
+    const [trail, setTrail] = useState("");
 
     const router = useRouter();
     const { idCourse } = router.query;
 
     async function getCourse() {
-        try {
-          const { data, error } = await supabase
-            .from("curso")
-            .select("*")
-            .eq("id", idCourse)
-          if (error) {
-            console.log(error)
-            return
-          }
-    
-          if (data) {
-            console.log(data)
-            setCourse(data[0].titulo)
-          }
-        } catch (error) {
-          console.error("Erro ao buscar trilha:", error);
+      try {
+        const { data, error } = await supabase
+          .from("curso")
+          .select("*")
+          .eq("id", idCourse)
+        if (error) {
+          console.log(error)
+          return
         }
+  
+        if (data) {
+          console.log(data)
+          setCourse(data[0].titulo)
+        }
+      } catch (error) {
+        console.error("Erro ao buscar trilha:", error);
+      }
+    }
+
+    async function getTrail() {
+      try {
+        const { data, error } = await supabase
+          .from("trilha")
+          .select("titulo, cursosTrilha!inner()")
+          .eq("cursosTrilha.fkCurso", idCourse);
+        if (error) {
+          console.log(error)
+          return
+        }
+  
+        if (data) {
+          console.log(data);
+          setTrail(data[0].titulo);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar trilha:", error);
+      }
     }
 
     useEffect(() => {
         (async function () {
             await getCourse();
+            await getTrail();
 
             if(idCourse) {
                 const res = await getLessons(idCourse);
@@ -107,5 +129,5 @@ export default function useLessons() {
         return { modulos: totalModulos, aulas: totalAulas };
       }
 
-    return { course, listModulesGroups, redirectToLesson, countModulesAndLessons };
+    return { trail, course, listModulesGroups, redirectToLesson, countModulesAndLessons };
 }

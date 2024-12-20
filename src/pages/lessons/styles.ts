@@ -3,6 +3,10 @@ import styled from "styled-components";
 export const MainContainer = styled.div`
     padding: 40px 20px;
 
+    p{
+        margin-bottom: 0;
+    }
+
     h1{
         font-size: 34px;
         font-weight: 500;
