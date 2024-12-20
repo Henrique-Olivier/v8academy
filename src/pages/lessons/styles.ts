@@ -16,7 +16,7 @@ export const MainContainer = styled.div`
 `;
 
 export const AccordionContainer = styled.div`
-    width: 70%;
+    width: 100%;
     margin-top: 30px;
 
     div.infos{
