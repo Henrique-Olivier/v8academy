@@ -16,7 +16,12 @@ max-height: 100%;
     }
 
     div.search{
-        width: 60%;
+        display: flex;
+        justify-content: space-between;
+
+        >div{
+            width: 60%;
+        }
 
         div > span{
             background-color: #2D71D6;
@@ -32,5 +37,10 @@ max-height: 100%;
 
     div.card{
         width: 30%;
+    }
+
+    div.action-admin{
+        display: flex;
+        gap: 20px;
     }
 `;
