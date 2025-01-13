@@ -5,7 +5,6 @@ import { getCourses } from "@/service/requisitions";
 import { supabase } from "@/service/supabase";
 
 export default function useManageTrail() {
-    
     const router = useRouter();
     const { addOrEdit } = router.query;
     
@@ -35,6 +34,16 @@ export default function useManageTrail() {
     }
     
     useEffect(() => {
+
+        if(addOrEdit !== "add" && addOrEdit !== "edit") {
+            router.push("/trails");
+            return
+        }
+
+        if(addOrEdit === "edit") {
+            setTitlePage("Editar trilha");
+        }
+
         async function setCourses() {
             if (addOrEdit == "add") {
                 const data = await getCourses();

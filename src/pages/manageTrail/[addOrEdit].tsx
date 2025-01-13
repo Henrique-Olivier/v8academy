@@ -5,7 +5,13 @@ import useManageTrail from "./hook";
 
 export default function manageTrail() {
 
-    const { titlePage, inputTitleTrail, inputDescriptionTrail, courses, modal, addNewTrail, toast } = useManageTrail();
+    const manageTrailData = useManageTrail();
+
+    if (!manageTrailData) {
+        return <div>Error loading trail data</div>;
+    }
+
+    const { titlePage, inputTitleTrail, inputDescriptionTrail, courses, modal, addNewTrail, toast } = manageTrailData;
 
     function listCoursesSelect() {
         return modal.select.listCourses.map(item => (
