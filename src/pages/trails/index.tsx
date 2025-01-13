@@ -65,7 +65,7 @@ export default function Trails() {
                         <span className="input-group-text" id="addon-wrapping"><Image src={searchIcon} alt="Icon de procura" /></span>
                     </div>
 
-                    { isAdmin ? <Button>Adicionar</Button> : <></> }
+                    { isAdmin ? <Button onClick={() => router.push("manageTrail/add")}>Adicionar</Button> : <></> }
                 </div>
 
                 <div className="cards">

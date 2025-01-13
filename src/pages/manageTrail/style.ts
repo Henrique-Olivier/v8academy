@@ -3,9 +3,16 @@ import styled from "styled-components";
 export const MainLayout = styled.div`
     margin: 50px;
 
-    >h1{
+    div.manageTrail{
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
         width: 100%;
         border-bottom: 1px solid #000000;
+        padding: 5px;
+    }
+
+    div.manageTrail h1{
         font-size: 24px;
     }
 `;

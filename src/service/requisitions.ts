@@ -31,3 +31,13 @@ export async function getLessons(idCourse: string | string[]) {
 
     return [];
 }
+
+export async function getCourses() {
+    const { data } = await supabase.from("curso").select();
+
+    if(data) {
+        return data;
+    }
+
+    return [];
+}
