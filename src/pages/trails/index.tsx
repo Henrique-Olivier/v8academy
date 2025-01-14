@@ -22,7 +22,7 @@ export default function Trails() {
                         <p className="card-text">{item.descricao}</p>
                         { isAdmin ?
                             <div className="action-admin">
-                                <Button variant="primary" onClick={() => router.push("/manageTrail/edit")}>Editar</Button>
+                                <Button variant="primary" onClick={() => router.push(`/manageTrail/edit/${item.id}`)}>Editar</Button>
                                 <Button variant="danger" onClick={() => {modal.handleShow(); modal.edit(item.id, item.titulo)}}>Excluir</Button>
                             </div>
                         :

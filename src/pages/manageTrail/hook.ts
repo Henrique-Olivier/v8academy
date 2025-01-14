@@ -7,7 +7,7 @@ import { supabase } from "@/service/supabase";
 export default function useManageTrail() {
     const router = useRouter();
     const { addOrEdit } = router.query;
-    
+
     const [titlePage, setTitlePage] = useState("Adicionar trilha");
     const [inputTitleTrail, setInputTitleTrail] = useState("");
     const [inputDescriptionTrail, setInputDescriptionTrail] = useState("");
@@ -35,27 +35,69 @@ export default function useManageTrail() {
     
     useEffect(() => {
 
-        if(addOrEdit !== "add" && addOrEdit !== "edit") {
+        if(!addOrEdit){
             router.push("/trails");
             return
         }
 
-        if(addOrEdit === "edit") {
+        const pathUrl = addOrEdit[0];
+        const idPathUrl = addOrEdit[1];
+
+        if(pathUrl === "edit") {
             setTitlePage("Editar trilha");
+
+            async function getInfosTrail(id: string) {
+                const { data } = await supabase
+                    .from("trilha")
+                    .select()
+                    .eq("id", id);
+                
+                if(data) {
+                    setInputTitleTrail(data[0].titulo);
+                    setInputDescriptionTrail(data[0].descricao);
+                }
+            }
+
+            async function getCoursesByTrail(id: string) {
+                const { data } = await supabase
+                    .from("cursosTrilha")
+                    .select()
+                    .eq("fkTrilha", id);
+                
+                if(data) {
+                    data.forEach(item => {
+                        getCourseById(item.fkCurso);
+                    })
+                }
+            }
+
+            async function getCourseById(id: string) {
+                const { data } = await supabase
+                    .from("curso")
+                    .select()
+                    .eq("id", id);
+                
+                if(data) {
+                    data.forEach(item => {
+                        setListCourses([...listCourses, { id: item.id, nome: item.titulo }]);
+                    })
+                }
+            }
+
+            getInfosTrail(idPathUrl);
+            getCoursesByTrail(idPathUrl);
         }
 
         async function setCourses() {
-            if (addOrEdit == "add") {
-                const data = await getCourses();
-                const courses: Course[] = data.map(item => {
-                    return {
-                        id: item.id,
-                        nome: item.titulo
-                    }
-                })
+            const data = await getCourses();
+            const courses: Course[] = data.map(item => {
+                return {
+                    id: item.id,
+                    nome: item.titulo
+                }
+            })
 
-                setListSelectCourses(courses);
-            }
+            setListSelectCourses(courses);
         }
 
         setCourses();
@@ -85,6 +127,22 @@ export default function useManageTrail() {
         }
     }
 
+    async function saveTrail() {
+
+        if(!addOrEdit){
+            return;
+        }
+
+        const pathUrl = addOrEdit[0];
+        const idPathUrl = addOrEdit[1];
+
+        if(pathUrl === "add") {
+            addNewTrail();
+        } else if(pathUrl === "edit") {
+            /* editTrail(); */
+        }
+    }
+
     return {
         titlePage,
         inputTitleTrail: {
@@ -110,7 +168,7 @@ export default function useManageTrail() {
                 onchange: setSelectCourse
             }
         },
-        addNewTrail,
+        saveTrail,
         toast: {
             show: {
                 value: showToast,

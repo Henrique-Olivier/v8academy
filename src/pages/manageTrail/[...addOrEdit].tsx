@@ -11,7 +11,7 @@ export default function manageTrail() {
         return <div>Error loading trail data</div>;
     }
 
-    const { titlePage, inputTitleTrail, inputDescriptionTrail, courses, modal, addNewTrail, toast } = manageTrailData;
+    const { titlePage, inputTitleTrail, inputDescriptionTrail, courses, modal, saveTrail, toast } = manageTrailData;
 
     function listCoursesSelect() {
         return modal.select.listCourses.map(item => (
@@ -51,7 +51,7 @@ export default function manageTrail() {
             </Toast>
                 <div className="manageTrail">
                     <h1>{titlePage}</h1>
-                    <Button variant="success" onClick={addNewTrail}>Salvar</Button>
+                    <Button variant="success" onClick={saveTrail}>Salvar</Button>
                 </div>
                 <FormContainer>
                     <Form.Label htmlFor="title-trail" className="mb-1">Titulo da trilha:</Form.Label>
