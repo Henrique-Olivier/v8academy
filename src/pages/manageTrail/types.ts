@@ -1,4 +1,4 @@
 export default interface Course {
-    id: string,
+    id: number,
     nome: string
 }

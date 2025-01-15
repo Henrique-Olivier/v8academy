@@ -81,7 +81,7 @@ export default function manageTrail() {
                         </Modal.Header>
 
                         <Modal.Body>
-                            <Form.Select aria-label="Default select example" onChange={e => modal.select.onchange({id: e.currentTarget.value, nome: e.currentTarget.options[e.currentTarget.selectedIndex].text })}>
+                            <Form.Select aria-label="Default select example" onChange={e => modal.select.onchange({id: Number(e.currentTarget.value), nome: e.currentTarget.options[e.currentTarget.selectedIndex].text })}>
                                 {listCoursesSelect()}
                             </Form.Select>
                         </Modal.Body>

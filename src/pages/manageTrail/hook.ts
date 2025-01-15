@@ -16,7 +16,7 @@ export default function useManageTrail() {
     const [show, setShow] = useState(false);
     const [titleModal, setTitleModal] = useState("Adicionar curso");
     const [listSelectCourses, setListSelectCourses] = useState<Course[]>([]);
-    const [selectCourse, setSelectCourse] = useState<Course>({ id: "0", nome: "" });
+    const [selectCourse, setSelectCourse] = useState<Course>({ id: 0, nome: "" });
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -63,7 +63,7 @@ export default function useManageTrail() {
                     .from("cursosTrilha")
                     .select()
                     .eq("fkTrilha", id);
-                
+
                 if(data) {
                     data.forEach(item => {
                         getCourseById(item.fkCurso);
@@ -79,7 +79,7 @@ export default function useManageTrail() {
                 
                 if(data) {
                     data.forEach(item => {
-                        setListCourses([...listCourses, { id: item.id, nome: item.titulo }]);
+                        setListCourses(prevList => [...prevList, { id: item.id, nome: item.titulo }]);
                     })
                 }
             }
@@ -127,6 +127,39 @@ export default function useManageTrail() {
         }
     }
 
+    async function editTrail(id: string) {
+        const { error } = await supabase
+            .from("cursosTrilha")
+            .delete()
+            .eq("fkTrilha", id)
+
+        if(!error) {
+            listCourses.map(async item => {
+                await supabase.from("cursosTrilha").insert({
+                    fkTrilha: id,
+                    fkCurso: item.id
+                });
+            });
+
+            const { error } = await supabase
+                .from("trilha")
+                .update({
+                    titulo: inputTitleTrail,
+                    descricao: inputDescriptionTrail
+                })
+                .eq("id", id);
+
+            if(!error) {
+                showNotification("Trilha editada com sucesso!", 3000, "success");
+                setTimeout(() => {
+                    router.push("/trails");
+                }, 2000)
+            } else {
+                showNotification("Erro ao editar trilha!", 3000, "error");
+            }
+        }
+    }
+
     async function saveTrail() {
 
         if(!addOrEdit){
@@ -139,7 +172,7 @@ export default function useManageTrail() {
         if(pathUrl === "add") {
             addNewTrail();
         } else if(pathUrl === "edit") {
-            /* editTrail(); */
+            editTrail(idPathUrl);
         }
     }
 
