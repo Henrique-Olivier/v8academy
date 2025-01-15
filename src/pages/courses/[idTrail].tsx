@@ -58,8 +58,10 @@ grid-template-columns: 18rem 18rem 18rem;
 gap: 40px;
 `
 const DivBtn = styled.div`
-width: 60%;
+width: 100%;
 padding: 10px 10px;
+display: flex;
+justify-content: space-between; 
 `
 const SearchBar = styled.div`
 width: 70%;
@@ -225,11 +227,36 @@ export default function CoursePage() {
     }
   }
 
+  function openEditCourse(idCourse: number) {
+    console.log("editar")
+    changeModalState()
+
+   if(idTrail == '0') {
+    const course = allCourses.find(course => course.id === idCourse)
+    if (course) {
+      setTitle(course.titulo)
+      setDescription(course.descricao)
+      setOrder(course.order)
+    }
+   } else {
+    const course = courses.find(course => course.curso.id === idCourse)
+
+    if (course) {
+      setTitle(course.curso.titulo)
+      setDescription(course.curso.descricao)
+      setOrder(course.curso.order)
+    }
+    
+   }
+
+
+  }
+
   function showCourses(courses: TrilhaCurso[]) {
     if (courses) {
-      return courses.map((course) => (
+      return courses.map((course, index) => (
 
-        <Card style={{ width: '18rem' }} key={course.curso.id}>
+        <Card style={{ width: '18rem' }} key={index}>
           <Card.Body>
             <Card.Title>{course.curso.titulo}</Card.Title>
             <Card.Text>
@@ -237,6 +264,9 @@ export default function CoursePage() {
             </Card.Text>
           </Card.Body>
           <DivBtn>
+            {isAdmin ? <Button variant="primary" onClick={() => {
+              openEditCourse(course.curso.id)
+            }}>Editar Curso</Button> : <></>}
             <Button variant="primary" onClick={() => {
               router.push(`/lessons/${course.curso.id}`)
             }}>Ver curso</Button>
@@ -259,6 +289,9 @@ export default function CoursePage() {
               </Card.Text>
             </Card.Body>
             <DivBtn>
+              {isAdmin ? <Button variant="primary" onClick={() => {
+                openEditCourse(course.id)
+              }}>Editar Curso</Button> : <></>}
               <Button variant="primary" onClick={() => {
                 router.push(`/lessons/${course.id}`)
               }}>Ver curso</Button>
@@ -279,15 +312,17 @@ export default function CoursePage() {
     }
   }
 
+
+
   async function addCourse() {
-    if(!title || !description || !order) {
+    if (!title || !description || !order) {
       console.log('Preencha todos os campos')
       return
     }
 
 
     try {
-      const { data , error } = await supabase
+      const { data, error } = await supabase
         .from("curso")
         .insert([
           {
@@ -303,7 +338,7 @@ export default function CoursePage() {
         return
       }
 
-      if(data) {
+      if (data) {
         console.log(data)
 
         if (idTrail == "0") {
@@ -311,28 +346,26 @@ export default function CoursePage() {
           changeModalState()
         } else {
 
-          const { data: trailData , error: trailError } = await supabase
-          .from("cursosTrilha")
-          .insert([
-            {
-              fkTrilha: idTrail,
-              fkCurso: data[0].id
-            }
-          ])
+          const { data: trailData, error: trailError } = await supabase
+            .from("cursosTrilha")
+            .insert([
+              {
+                fkTrilha: idTrail,
+                fkCurso: data[0].id
+              }
+            ])
 
-          if(trailError) {
+          if (trailError) {
             console.log(trailError)
             return
           }
 
           console.log(trailData + 'sucesso')
-          
+
           changeModalState()
           getCoursesByTrail()
         }
       }
-
-
 
     } catch (error) {
       console.error("Erro ao adicionar curso:")
@@ -356,7 +389,7 @@ export default function CoursePage() {
         <Modal.Body>
           <Form.Label htmlFor="basic-url">Título:</Form.Label>
           <InputGroup className="mb-3">
-            <Form.Control value={title} onChange={e => {setTitle(e.target.value)}}  aria-describedby="basic-addon3" />
+            <Form.Control value={title} onChange={e => { setTitle(e.target.value) }} aria-describedby="basic-addon3" />
           </InputGroup>
           <Form.Label htmlFor="basic-url">Descrição:</Form.Label>
           <InputGroup className="mb-3">
