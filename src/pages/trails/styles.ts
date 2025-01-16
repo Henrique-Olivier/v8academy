@@ -36,11 +36,21 @@ max-height: 100%;
     }
 
     div.card{
-        width: 30%;
+        width: min-content;
+
+        div.card-body{
+            display: flex;
+            flex-direction: column;
+
+            button.btn{
+                white-space: nowrap;
+            }
+        }
     }
 
     div.action-admin{
         display: flex;
         gap: 20px;
+        margin-top: auto;
     }
 `;

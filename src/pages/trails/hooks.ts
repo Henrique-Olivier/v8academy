@@ -60,7 +60,8 @@ export default function useTrails() {
                 return console.log(error);
             }
     
-            return console.log('Trilha deletada com sucesso');
+            router.reload();
+            return;
         }
     }
 
