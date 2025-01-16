@@ -3,7 +3,7 @@ import { supabase } from "@/service/supabase";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { JSX, use, useEffect, useState } from "react";
-import { Button, Card, Form, FormControl, InputGroup } from "react-bootstrap";
+import { Button, Card, Form, FormControl, InputGroup, Toast } from "react-bootstrap";
 import searchIcon from "../../assets/search_icon.svg";
 import Modal from 'react-bootstrap/Modal';
 
@@ -109,7 +109,9 @@ export default function CoursePage() {
   const [isModalRemove, setIsModalRemove] = useState(false);
   const [idToEdit, setIdToEdit] = useState(0);
 
-
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("success");
 
   useEffect(() => {
 
@@ -174,7 +176,7 @@ export default function CoursePage() {
   }
 
   async function getCoursesByTrail() {
-    if(!idTrail) return;
+    if (!idTrail) return;
 
     try {
       const { data, error } = await supabase
@@ -216,7 +218,7 @@ export default function CoursePage() {
   }
 
   async function getTrail() {
-    if(!idTrail) return;
+    if (!idTrail) return;
 
     try {
       const { data, error } = await supabase
@@ -304,8 +306,8 @@ export default function CoursePage() {
                 {course.descricao}
               </Card.Text>
               {isAdmin ? <Card.Text>
-              Ordem: {course.order}
-            </Card.Text> : <></>}
+                Ordem: {course.order}
+              </Card.Text> : <></>}
             </Card.Body>
             <DivBtn>
               {isAdmin ? <Button variant="primary" onClick={() => {
@@ -354,6 +356,7 @@ export default function CoursePage() {
 
       if (error) {
         console.log(error)
+        showNotification("Erro ao adicionar curso", 3000, "error");
         return
       }
 
@@ -380,6 +383,7 @@ export default function CoursePage() {
           }
 
           console.log(trailData + 'sucesso')
+          showNotification("Curso adicionado com sucesso", 3000, "success");
 
           changeModalState()
           getCoursesByTrail()
@@ -388,6 +392,7 @@ export default function CoursePage() {
 
     } catch (error) {
       console.error("Erro ao adicionar curso:")
+      showNotification("Erro ao adicionar curso", 3000, "error");
     }
   }
 
@@ -420,9 +425,9 @@ export default function CoursePage() {
         return course.curso.titulo
       }
     }
-  } 
+  }
 
-  async function editCourse () {
+  async function editCourse() {
     if (!title || !description || !order) {
       console.log('Preencha todos os campos')
       return
@@ -450,56 +455,93 @@ export default function CoursePage() {
         if (idTrail == "0") {
           getAllCourses()
           changeModalState()
+          showNotification("Curso editado com sucesso", 3000, "success");
         } else {
           getCoursesByTrail()
           changeModalState()
+          showNotification("Curso editado com sucesso", 3000, "success");
         }
       }
 
     } catch (error) {
       console.error("Erro ao adicionar curso:")
+      showNotification("Erro ao editar curso", 3000, "error");
     }
   }
 
   async function removeCourse() {
     try {
-      const {error} = await supabase
+      const { error } = await supabase
         .from("cursosTrilha")
         .delete()
         .eq("fkCurso", idToEdit)
 
       if (error) {
         console.log(error)
+        showNotification("Erro ao remover curso", 3000, "error");
         return
       }
 
 
-      const {error: error2 } = await supabase
+      const { error: error2 } = await supabase
         .from("curso")
         .delete()
         .eq("id", idToEdit)
 
       if (error2) {
         console.log(error2)
+        showNotification("Erro ao remover curso", 3000, "error");
         return
       }
 
       closeModalRemove()
       if (idTrail == '0') {
         getAllCourses()
+        showNotification  ("Curso removido com sucesso", 3000, "success");
       } else {
         getCoursesByTrail()
+        showNotification  ("Curso removido com sucesso", 3000, "success");
       }
 
 
 
     } catch (error) {
       console.error("Erro ao remover curso:", error)
+      showNotification("Erro ao remover curso", 3000, "error");
     }
+  }
+
+
+  function showNotification(message: string, duration: number, type: "error" | "success") {
+    setToastMessage(message);
+    setToastType(type);
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, duration);
   }
 
   return (
     <Layout>
+      <Toast
+        onClose={() => setShowToast(false)}
+        show={showToast}
+        delay={3000}
+        autohide
+        style={{
+          position: 'fixed',
+          top: 20,
+          right: 20,
+          zIndex: 9999,
+        }}
+        bg={toastType === "success" ? "success" : "danger"}
+      >
+        <Toast.Header>
+          <strong className="me-auto">{toastType === "success" ? "Success" : "Error"}</strong>
+        </Toast.Header>
+        <Toast.Body>{toastMessage}</Toast.Body>
+      </Toast>
+
       <Modal
         show={isModalRemove}
         onHide={closeModalRemove}
