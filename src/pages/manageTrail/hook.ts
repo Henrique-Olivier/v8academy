@@ -176,6 +176,10 @@ export default function useManageTrail() {
         }
     }
 
+    function deleteFromListCourses(id: number) {
+        setListCourses((prevList) => prevList.filter(item => item.id !== id));
+    }
+
     return {
         titlePage,
         inputTitleTrail: {
@@ -202,6 +206,7 @@ export default function useManageTrail() {
             }
         },
         saveTrail,
+        deleteFromListCourses,
         toast: {
             show: {
                 value: showToast,

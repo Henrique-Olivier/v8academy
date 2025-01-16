@@ -11,7 +11,7 @@ export default function manageTrail() {
         return <div>Error loading trail data</div>;
     }
 
-    const { titlePage, inputTitleTrail, inputDescriptionTrail, courses, modal, saveTrail, toast } = manageTrailData;
+    const { titlePage, inputTitleTrail, inputDescriptionTrail, courses, modal, saveTrail, deleteFromListCourses, toast } = manageTrailData;
 
     function listCoursesSelect() {
         return modal.select.listCourses.map(item => (
@@ -23,7 +23,7 @@ export default function manageTrail() {
         return courses.listCourses.map(item => (
             <tr>
                 <td>{item.nome}</td>
-                <td><Button variant="danger">Excluir da trilha</Button></td>
+                <td><Button variant="danger" onClick={() => deleteFromListCourses(item.id)}>Excluir da trilha</Button></td>
             </tr>
         ))
     }
