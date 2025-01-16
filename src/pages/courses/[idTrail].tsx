@@ -8,6 +8,7 @@ import searchIcon from "../../assets/search_icon.svg";
 import Modal from 'react-bootstrap/Modal';
 
 import styled from "styled-components";
+import { get } from "http";
 
 const ContainerContent = styled.div`
 width: 100%;
@@ -104,6 +105,9 @@ export default function CoursePage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [order, setOrder] = useState(0);
+  const [isModalEdit, setIsModalEdit] = useState(false);
+  const [isModalRemove, setIsModalRemove] = useState(false);
+  const [idToEdit, setIdToEdit] = useState(0);
 
 
 
@@ -140,7 +144,7 @@ export default function CoursePage() {
 
         console.log('admin')
       } else {
-        setIsAdmin(false)
+        setIsAdmin(false);
       }
     } else {
       router.push('/login')
@@ -170,6 +174,8 @@ export default function CoursePage() {
   }
 
   async function getCoursesByTrail() {
+    if(!idTrail) return;
+
     try {
       const { data, error } = await supabase
         .from("cursosTrilha")
@@ -189,6 +195,7 @@ export default function CoursePage() {
         .eq("fkTrilha", idTrail);
 
       if (error) {
+        console.log('erro do get courses by trail')
         console.log(error)
         return
       };
@@ -200,6 +207,7 @@ export default function CoursePage() {
           fkCurso: item.fkCurso,
           fkTrilha: item.fkTrilha,
         }));
+        console.log("adicionando cursos ...")
         setCourses(DataCourses);
       }
     } catch (error) {
@@ -208,6 +216,8 @@ export default function CoursePage() {
   }
 
   async function getTrail() {
+    if(!idTrail) return;
+
     try {
       const { data, error } = await supabase
         .from("trilha")
@@ -230,24 +240,27 @@ export default function CoursePage() {
   function openEditCourse(idCourse: number) {
     console.log("editar")
     changeModalState()
+    setIdToEdit(idCourse)
 
-   if(idTrail == '0') {
-    const course = allCourses.find(course => course.id === idCourse)
-    if (course) {
-      setTitle(course.titulo)
-      setDescription(course.descricao)
-      setOrder(course.order)
-    }
-   } else {
-    const course = courses.find(course => course.curso.id === idCourse)
+    if (idTrail == '0') {
+      const course = allCourses.find(course => course.id === idCourse)
+      if (course) {
+        setTitle(course.titulo)
+        setDescription(course.descricao)
+        setOrder(course.order)
+        setIsModalEdit(true)
+      }
+    } else {
+      const course = courses.find(course => course.curso.id === idCourse)
 
-    if (course) {
-      setTitle(course.curso.titulo)
-      setDescription(course.curso.descricao)
-      setOrder(course.curso.order)
+      if (course) {
+        setTitle(course.curso.titulo)
+        setDescription(course.curso.descricao)
+        setOrder(course.curso.order)
+        setIsModalEdit(true)
+      }
+
     }
-    
-   }
 
 
   }
@@ -262,6 +275,9 @@ export default function CoursePage() {
             <Card.Text>
               {course.curso.descricao}
             </Card.Text>
+            {isAdmin ? <Card.Text>
+              Ordem: {course.curso.order}
+            </Card.Text> : <></>}
           </Card.Body>
           <DivBtn>
             {isAdmin ? <Button variant="primary" onClick={() => {
@@ -287,6 +303,9 @@ export default function CoursePage() {
               <Card.Text>
                 {course.descricao}
               </Card.Text>
+              {isAdmin ? <Card.Text>
+              Ordem: {course.order}
+            </Card.Text> : <></>}
             </Card.Body>
             <DivBtn>
               {isAdmin ? <Button variant="primary" onClick={() => {
@@ -309,6 +328,7 @@ export default function CoursePage() {
       setTitle('')
       setDescription('')
       setOrder(0)
+      setIsModalEdit(false)
     }
   }
 
@@ -319,7 +339,6 @@ export default function CoursePage() {
       console.log('Preencha todos os campos')
       return
     }
-
 
     try {
       const { data, error } = await supabase
@@ -372,8 +391,138 @@ export default function CoursePage() {
     }
   }
 
+
+
+
+  function openModalRemove() {
+    setIsModalRemove(true);
+  }
+
+  function closeModalRemove() {
+    setIsModalRemove(false);
+  }
+
+  function OpenConfirmRemove() {
+    openModalRemove();
+    changeModalState();
+  }
+
+  function getCourseName(idCourse: number) {
+    if (idTrail == '0') {
+      const course = allCourses.find(course => course.id === idCourse)
+      if (course) {
+        return course.titulo
+      }
+    } else {
+      const course = courses.find(course => course.curso.id === idCourse)
+
+      if (course) {
+        return course.curso.titulo
+      }
+    }
+  } 
+
+  async function editCourse () {
+    if (!title || !description || !order) {
+      console.log('Preencha todos os campos')
+      return
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from("curso")
+        .update({
+          titulo: title,
+          descricao: description,
+          order: order
+        })
+        .eq("id", idToEdit)
+        .select("*")
+
+      if (error) {
+        console.log(error)
+        return
+      }
+
+      if (data) {
+        console.log(data)
+
+        if (idTrail == "0") {
+          getAllCourses()
+          changeModalState()
+        } else {
+          getCoursesByTrail()
+          changeModalState()
+        }
+      }
+
+    } catch (error) {
+      console.error("Erro ao adicionar curso:")
+    }
+  }
+
+  async function removeCourse() {
+    try {
+      const {error} = await supabase
+        .from("cursosTrilha")
+        .delete()
+        .eq("fkCurso", idToEdit)
+
+      if (error) {
+        console.log(error)
+        return
+      }
+
+
+      const {error: error2 } = await supabase
+        .from("curso")
+        .delete()
+        .eq("id", idToEdit)
+
+      if (error2) {
+        console.log(error2)
+        return
+      }
+
+      closeModalRemove()
+      if (idTrail == '0') {
+        getAllCourses()
+      } else {
+        getCoursesByTrail()
+      }
+
+
+
+    } catch (error) {
+      console.error("Erro ao remover curso:", error)
+    }
+  }
+
   return (
     <Layout>
+      <Modal
+        show={isModalRemove}
+        onHide={closeModalRemove}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Remover Curso:
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <p>Tem certeza que deseja remover o curso '{getCourseName(idToEdit)}'?</p>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button onClick={closeModalRemove}>Cancelar</Button>
+          <Button variant="danger" onClick={removeCourse}>Remover</Button>
+        </Modal.Footer>
+
+      </Modal>
       <Modal
         show={showModal}
         onHide={changeModalState}
@@ -400,10 +549,20 @@ export default function CoursePage() {
             <Form.Control value={order} onChange={e => setOrder(Number(e.target.value))} aria-describedby="basic-addon3" />
           </InputGroup>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="danger" onClick={changeModalState}>Cancelar</Button>
-          <Button onClick={addCourse}>Adiconar</Button>
-        </Modal.Footer>
+
+        {
+          isModalEdit ? <Modal.Footer>
+            <Button variant="danger" onClick={() => { OpenConfirmRemove() }}>Remover Curso</Button>
+            <Button onClick={editCourse}>Salvar Alterações</Button>
+            <Button onClick={changeModalState}>Cancelar</Button>
+          </Modal.Footer>
+            :
+            <Modal.Footer>
+              <Button variant="danger" onClick={changeModalState}>Cancelar</Button>
+              <Button onClick={addCourse}>Adiconar</Button>
+            </Modal.Footer>
+        }
+
       </Modal>
       <ContainerContent>
         <Header>
