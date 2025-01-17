@@ -25,7 +25,6 @@ export default function useLessons() {
         }
   
         if (data && data.length !== 0) {
-          console.log(data)
           setCourse(data[0].titulo)
         }
       } catch (error) {
@@ -45,7 +44,6 @@ export default function useLessons() {
         }
   
         if (data && data.length !== 0) {
-          console.log(data);
           setTrail(data[0].titulo);
         }
       } catch (error) {
@@ -60,10 +58,11 @@ export default function useLessons() {
 
             if(idCourse) {
                 const res = await getLessons(idCourse);
+                console.log(res);
                 const resMapping: ILessons[] = res.map(item => {
                     const idAula: number = item.idAula;
                     const titulo: string = item.titulo;
-                    const modulo = item.modulo.titulo;
+                    const modulo: string = item.modulo.titulo;
 
                     return {
                         idAula,
