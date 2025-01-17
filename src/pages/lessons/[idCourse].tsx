@@ -5,15 +5,13 @@ import useLessons from "./hook";
 
 export default function Lessons() {
 
-    const { trail, course, listModulesGroups, redirectToLesson, countModulesAndLessons } = useLessons();
+    const { isAdmin, trail, course, listModulesGroups, redirectToLesson, countModulesAndLessons } = useLessons();
 
     function showModules() {
         let count = 0;
 
         return listModulesGroups.map(item => {
             count++;
-            console.log(item)
-            console.log(count)
             return (
                 <Accordion.Item eventKey={count.toString()}>
                     <Accordion.Header>{item.modulo}</Accordion.Header>
@@ -37,8 +35,10 @@ export default function Lessons() {
             <MainContainer>
                 <p>{`${trail} > curso:`}</p>
                 <h1>{course}</h1>
+                
+                {isAdmin && (<div className="adm"><Button>Adicionar módulo</Button></div>)}
 
-                <AccordionContainer>
+                <AccordionContainer $admin={isAdmin}>
                     <div className="infos">
                         <h4>Total de Módulos: {countModulesAndLessons?.modulos}</h4>
                         <h5>Total de Aulas: {countModulesAndLessons?.aulas}</h5>

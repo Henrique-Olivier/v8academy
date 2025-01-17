@@ -7,11 +7,34 @@ import { supabase } from "@/service/supabase";
 export default function useLessons() {
     const [listModulesGroups, setListModulesGroups] = useState<{modulo: string, aulas: ILessons[] }[]>([]);
     const [countModulesAndLessons, setCountModulesAndLessons] = useState<{modulos: number, aulas: number}>();
+    const [isAdmin, setIsAdmin] = useState(false);
     const [course, setCourse] = useState("");
     const [trail, setTrail] = useState("");
 
     const router = useRouter();
     const { idCourse } = router.query;
+
+    async function authenticate() {
+      const userObject = localStorage.getItem("sb-bfogzwmikqkepnhxrjyt-auth-token");
+      if (userObject) {
+          const parsedUserObject = JSON.parse(userObject)
+          const userId = parsedUserObject.user.id
+          const { data, error } = await supabase
+          .from('usuario')
+          .select('*')
+          .eq('id', userId)
+          if(error) {
+              return
+          }
+          if(data[0].isAdmin) {
+              setIsAdmin(true);
+          } else {
+              setIsAdmin(false)
+          }
+      } else {
+          router.push('/login')
+      }
+    }
 
     async function getCourse() {
       try {
@@ -54,6 +77,7 @@ export default function useLessons() {
     }
 
     useEffect(() => {
+      authenticate();
         (async function () {
             await getCourse();
             await getTrail();
@@ -129,5 +153,5 @@ export default function useLessons() {
         return { modulos: totalModulos, aulas: totalAulas };
       }
 
-    return { trail, course, listModulesGroups, redirectToLesson, countModulesAndLessons };
+    return { isAdmin, trail, course, listModulesGroups, redirectToLesson, countModulesAndLessons };
 }
