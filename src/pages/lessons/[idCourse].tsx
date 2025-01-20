@@ -5,7 +5,7 @@ import useLessons from "./hook";
 
 export default function Lessons() {
 
-    const { isAdmin, trail, course, listModulesGroups, redirectToLesson, countModulesAndLessons } = useLessons();
+    const { isAdmin, trail, course, listModulesGroups, redirectToLesson, redirectToCreateModule, countModulesAndLessons } = useLessons();
 
     function showModules() {
         let count = 0;
@@ -36,7 +36,7 @@ export default function Lessons() {
                 <p>{`${trail} > curso:`}</p>
                 <h1>{course}</h1>
                 
-                {isAdmin && (<div className="adm"><Button>Adicionar módulo</Button></div>)}
+                {isAdmin && (<div className="adm"><Button onClick={redirectToCreateModule}>Criar módulo</Button></div>)}
 
                 <AccordionContainer $admin={isAdmin}>
                     <div className="infos">

@@ -141,6 +141,10 @@ export default function useLessons() {
         router.push(`/player/${idVideo}`);
     }
 
+    function redirectToCreateModule() {
+      router.push(`/manageModule/create`);
+    }
+
     function contarModulosEAulas(modulos: ModuloComAulas[]): { modulos: number; aulas: number } {
         let totalModulos = modulos.length;  // O número de módulos é o tamanho do array
         let totalAulas = 0;
@@ -153,5 +157,5 @@ export default function useLessons() {
         return { modulos: totalModulos, aulas: totalAulas };
       }
 
-    return { isAdmin, trail, course, listModulesGroups, redirectToLesson, countModulesAndLessons };
+    return { isAdmin, trail, course, listModulesGroups, redirectToLesson, redirectToCreateModule, countModulesAndLessons };
 }
