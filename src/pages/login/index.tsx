@@ -57,7 +57,7 @@ const Login: React.FC = () => {
           </label>
 
           <div className="forgotPassword">
-            <Link href="#">Esqueci minha senha</Link>
+            <Link href="/register">Cadastre-se</Link>
           </div>
 
           <div className="btn-login">
