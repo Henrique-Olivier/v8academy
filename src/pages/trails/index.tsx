@@ -1,8 +1,8 @@
 import Image from "next/image";
-import { MainContainer } from "./styles";
+import { MainContainer } from "../../components/trails/styles";
 import searchIcon from "../../assets/search_icon.svg";
-import { ITrails } from "./types";
-import useTrails from "./hooks";
+import { ITrails } from "../../components/trails/types";
+import useTrails from "../../components/trails/hooks";
 import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
 import { Button, Modal } from "react-bootstrap";

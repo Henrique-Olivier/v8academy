@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { supabase } from '@/service/supabase';
 import Layout from '../../components/Layout';
-import { ButtonDiv, ContainerContent, Header } from './style';
+import { ButtonDiv, ContainerContent, Header } from '../../components/player/style';
 import { Button, Placeholder, Spinner } from 'react-bootstrap';
 
 const VideoFrame = styled.div`

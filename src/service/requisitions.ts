@@ -1,5 +1,5 @@
 import { supabase } from "./supabase";
-import { ITrails } from "../pages/trails/types";
+import { ITrails } from "../components/trails/types";
 
 export async function getTrails() {
     const { data } = await supabase.from("trilha").select();

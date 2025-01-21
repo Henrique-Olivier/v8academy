@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
-import { FormContainer, MainLayout } from "./style";
+import { FormContainer, MainLayout } from "../../components/manageTrail/style";
 import { Button, Form, InputGroup, Modal, Table, Toast } from "react-bootstrap";
-import useManageTrail from "./hook";
+import useManageTrail from "../../components/manageTrail/hook";
 
 export default function manageTrail() {
 

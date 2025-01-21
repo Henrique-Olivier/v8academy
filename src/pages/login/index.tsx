@@ -3,9 +3,9 @@ import React from 'react';
 import logo from '../../assets/v8_logo.svg';
 import emailIcon from '../../assets/email_icon.svg';
 import passwordIcon from '../../assets/password_icon.svg';
-import { LoginContainer, MainContainer } from './styles';
+import { LoginContainer, MainContainer } from '../../components/login/styles';
 import Link from 'next/link';
-import useLogin from './hook';
+import useLogin from '../../components/login/hook';
 import { Toast } from 'react-bootstrap';
 
 const Login: React.FC = () => {
