@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import useManageModule from "./hook";
 import { FormContainer, MainLayout } from "./style";
-import { Button, Form, InputGroup, Modal, Table } from "react-bootstrap";
+import { Button, Form, InputGroup, Modal, Table, Toast } from "react-bootstrap";
 
 export default function ManageModule() {
   const manageModuleData = useManageModule();
@@ -10,7 +10,7 @@ export default function ManageModule() {
     return null;
   }
 
-  const { lessons, modal, createOrEdit } = manageModuleData;
+  const { inputModule, lessons, modal, saveModule, toast } = manageModuleData;
 
   function showLessons() {
     return lessons.listLessons.map(item => (
@@ -26,7 +26,7 @@ export default function ManageModule() {
   return (
     <Layout>
       <MainLayout>
-      {/* <Toast
+      <Toast
           onClose={() => toast.show.set(false)}
           show={toast.show.value}
           delay={3000}
@@ -43,10 +43,10 @@ export default function ManageModule() {
               <strong className="me-auto">{toast.type === "success" ? "Success" : "Error"}</strong>
           </Toast.Header>
           <Toast.Body>{toast.message}</Toast.Body>
-      </Toast> */}
+      </Toast>
           <div className="manageTrail">
               <h1>Criar modulo</h1>
-              <Button variant="success">Salvar</Button>
+              <Button variant="success" onClick={saveModule}>Salvar</Button>
           </div>
           <FormContainer>
               <Form.Label htmlFor="title-trail" className="mb-1">Titulo do modulo:</Form.Label>
@@ -54,6 +54,8 @@ export default function ManageModule() {
                   <Form.Control
                   id="title-trail"
                   placeholder="Ex: primeiros passos com react"
+                  value={inputModule.value}
+                  onChange={e => inputModule.update(e.target.value)}
                   />
               </InputGroup>
 
@@ -86,7 +88,7 @@ export default function ManageModule() {
                       <Button variant="secondary" onClick={modal.handleClose}>
                           Fechar
                       </Button>
-                      <Button variant="primary" /* onClick={() => lessons.add([...lessons.listLessons,  modal.select.value])} */>
+                      <Button variant="primary" onClick={() => lessons.add(modal.input.title.value, modal.input.url.value)}>
                         Adicionar
                       </Button>
                   </Modal.Footer>
@@ -107,7 +109,7 @@ export default function ManageModule() {
                       </tr>
                   </thead>
                   <tbody>
-                      
+                    {showLessons()}
                   </tbody>
               </Table>
           </FormContainer>

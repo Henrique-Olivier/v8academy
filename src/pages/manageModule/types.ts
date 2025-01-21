@@ -1,4 +1,5 @@
 export interface Lesson {
-  id: number,
-  titulo: string
+  id?: number,
+  titulo: string,
+  url: string
 }

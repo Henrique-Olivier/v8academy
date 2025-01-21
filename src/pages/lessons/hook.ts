@@ -142,7 +142,7 @@ export default function useLessons() {
     }
 
     function redirectToCreateModule() {
-      router.push(`/manageModule/create`);
+      router.push(`/manageModule/create/${idCourse}`);
     }
 
     function contarModulosEAulas(modulos: ModuloComAulas[]): { modulos: number; aulas: number } {
