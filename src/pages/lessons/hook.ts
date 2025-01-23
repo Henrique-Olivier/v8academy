@@ -1,12 +1,12 @@
 import { getLessons } from "@/service/requisitions";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { IGroupLessons, ILessons, ModuloComAulas } from "./types";
+import { CountModulesAndLessons, IGroupLessons, ILessons, Modules, ModuloComAulas } from "./types";
 import { supabase } from "@/service/supabase";
 
 export default function useLessons() {
-    const [listModulesGroups, setListModulesGroups] = useState<{modulo: string, aulas: ILessons[] }[]>([]);
-    const [countModulesAndLessons, setCountModulesAndLessons] = useState<{modulos: number, aulas: number}>();
+    const [listModulesGroups, setListModulesGroups] = useState<Modules[]>([]);
+    const [countModulesAndLessons, setCountModulesAndLessons] = useState<CountModulesAndLessons>();
     const [isAdmin, setIsAdmin] = useState(false);
     const [course, setCourse] = useState("");
     const [trail, setTrail] = useState("");
@@ -87,11 +87,13 @@ export default function useLessons() {
                 const resMapping: ILessons[] = res.map(item => {
                     const idAula: number = item.idAula;
                     const titulo: string = item.titulo;
+                    const idModulo = item.modulo.id;
                     const modulo = item.modulo.titulo;
 
                     return {
                         idAula,
                         titulo,
+                        idModulo,
                         modulo
                     }
                 })
@@ -123,6 +125,7 @@ export default function useLessons() {
           acumulador[moduloTitulo].push({
             idAula: lesson.idAula,
             titulo: lesson.titulo,
+            idModulo: lesson.idModulo,
             modulo: lesson.modulo
           });
 
@@ -132,6 +135,7 @@ export default function useLessons() {
 
     function transformarEmArray(groupLessons: IGroupLessons) {
         return Object.keys(groupLessons).map(moduloTitulo => ({
+          idModulo: groupLessons[moduloTitulo][0].idModulo,
           modulo: moduloTitulo,
           aulas: groupLessons[moduloTitulo]
         }));
@@ -143,6 +147,10 @@ export default function useLessons() {
 
     function redirectToCreateModule() {
       router.push(`/manageModule/create/${idCourse}`);
+    }
+
+    function redirectToEditModule(idModule: number) {
+      router.push(`/manageModule/edit/${idModule}`);
     }
 
     function contarModulosEAulas(modulos: ModuloComAulas[]): { modulos: number; aulas: number } {
@@ -157,5 +165,5 @@ export default function useLessons() {
         return { modulos: totalModulos, aulas: totalAulas };
       }
 
-    return { isAdmin, trail, course, listModulesGroups, redirectToLesson, redirectToCreateModule, countModulesAndLessons };
+    return { isAdmin, trail, course, listModulesGroups, redirectToLesson, redirectToCreateModule, redirectToEditModule, countModulesAndLessons };
 }

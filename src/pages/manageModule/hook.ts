@@ -7,6 +7,8 @@ export default function useManageModule() {
   const router = useRouter();
   const { createOrEdit } = router.query;
 
+  const [titlePage, setTitlePage] = useState("Criar modulo");
+  const [idModule, setIdModule] = useState();
   const [inputModuleTitle, setInputModuleTitle] = useState("");
 
   const [show, setShow] = useState(false);
@@ -28,6 +30,25 @@ export default function useManageModule() {
 
   const pathUrl = createOrEdit[0];
   const idCourse = createOrEdit[1];
+
+  useEffect(() => {
+    if(pathUrl === "edit") {
+      setTitlePage("Editar modulo");
+      async function getInfosModule(){
+        const { data } = await supabase
+          .from("modulo")
+          .select("id, titulo")
+          .eq("id", idCourse);
+        
+        if(data) {
+          setIdModule(data[0].id);
+          setInputModuleTitle(data[0].titulo);
+        }
+      }
+
+      getInfosModule();
+    }
+  }, [])
 
   function handleAdd(title: string, url: string) {
     const newLesson = {titulo: title, url}
@@ -87,7 +108,7 @@ export default function useManageModule() {
   }
 
   return {
-    createOrEdit,
+    titlePage,
     lessons: {
       listLessons,
       add: handleAdd,

@@ -10,7 +10,7 @@ export default function ManageModule() {
     return null;
   }
 
-  const { inputModule, lessons, modal, saveModule, toast } = manageModuleData;
+  const { titlePage, inputModule, lessons, modal, saveModule, toast } = manageModuleData;
 
   function showLessons() {
     return lessons.listLessons.map(item => (
@@ -45,7 +45,7 @@ export default function ManageModule() {
           <Toast.Body>{toast.message}</Toast.Body>
       </Toast>
           <div className="manageTrail">
-              <h1>Criar modulo</h1>
+              <h1>{titlePage}</h1>
               <Button variant="success" onClick={saveModule}>Salvar</Button>
           </div>
           <FormContainer>

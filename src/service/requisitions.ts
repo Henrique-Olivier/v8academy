@@ -21,7 +21,7 @@ export async function getTrails() {
 
 export async function getLessons(idCourse: string | string[]) {
     const { data } = await supabase.from("aula")
-        .select("idAula, titulo, modulo!inner(titulo)")
+        .select("idAula, titulo, modulo!inner(id, titulo)")
         .eq('modulo.fkCurso', idCourse)
 
     if(data) {
