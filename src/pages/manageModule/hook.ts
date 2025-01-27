@@ -8,7 +8,7 @@ export default function useManageModule() {
   const { createOrEdit } = router.query;
 
   const [titlePage, setTitlePage] = useState("Criar modulo");
-  const [idModule, setIdModule] = useState();
+  const [idModule, setIdModule] = useState("");
   const [inputModuleTitle, setInputModuleTitle] = useState("");
 
   const [show, setShow] = useState(false);
@@ -43,16 +43,54 @@ export default function useManageModule() {
         if(data) {
           setIdModule(data[0].id);
           setInputModuleTitle(data[0].titulo);
+
+          getLessonsByModule();
+        }
+      }
+
+      async function getLessonsByModule() {
+        const { data } = await supabase
+          .from("aula")
+          .select("idAula, titulo, url")
+          .eq("fkModulo", idModule);
+
+        if(data) {
+          setListLessons(data);
         }
       }
 
       getInfosModule();
     }
-  }, [])
+  }, [idModule])
 
   function handleAdd(title: string, url: string) {
     const newLesson = {titulo: title, url}
     setListLessons([...listLessons, newLesson])
+  }
+
+  async function editModule() {
+    const { data } = await supabase
+      .from("modulo")
+      .update({titulo: inputModuleTitle})
+      .eq('id', idModule)
+      .select("fkCurso");
+
+      if(data) {
+        await editLessons();
+        router.push(`/lessons/${data[0].fkCurso}`);
+      }
+
+  }
+
+  async function editLessons() {
+    const { error } = await supabase
+      .from("aula")
+      .delete()
+      .eq('fkModulo', idModule)
+
+      if(!error) {
+        await createLessons(idModule);
+      }
   }
 
   async function createModule() {
@@ -66,7 +104,8 @@ export default function useManageModule() {
 
       if(data) {
         console.log(data);
-        createLessons(data[0].id);
+        await createLessons(data[0].id);
+        router.push(`/lessons/${idCourse}`)
       }
   }
 
@@ -79,7 +118,7 @@ export default function useManageModule() {
     }, duration);
   }
 
-  function createLessons(idCourseInserted: string) {
+  async function createLessons(idCourseInserted: string) {
     listLessons.forEach(async (lesson) => {
       const titulo = lesson.titulo;
       const url = lesson.url;
@@ -94,7 +133,6 @@ export default function useManageModule() {
 
         if(!error) {
           showNotification("Modulo e aulas criados com sucesso!", 3000, "success");
-          router.push(`/lessons/${idCourseInserted}`);
         }
     })
   }
@@ -103,7 +141,7 @@ export default function useManageModule() {
     if(pathUrl === "create") {
       await createModule();
     } else if(pathUrl === "edit") {
-
+      await editModule();
     }
   }
 
