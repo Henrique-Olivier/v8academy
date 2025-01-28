@@ -154,16 +154,35 @@ export default function useLessons() {
     }
 
     function contarModulosEAulas(modulos: ModuloComAulas[]): { modulos: number; aulas: number } {
-        let totalModulos = modulos.length;  // O número de módulos é o tamanho do array
-        let totalAulas = 0;
-      
-        // Percorrendo os módulos e contando as aulas
-        modulos.forEach(modulo => {
-          totalAulas += modulo.aulas.length;  // Adiciona a quantidade de aulas no módulo
-        });
-      
-        return { modulos: totalModulos, aulas: totalAulas };
-      }
+      let totalModulos = modulos.length;  // O número de módulos é o tamanho do array
+      let totalAulas = 0;
+    
+      // Percorrendo os módulos e contando as aulas
+      modulos.forEach(modulo => {
+        totalAulas += modulo.aulas.length;  // Adiciona a quantidade de aulas no módulo
+      });
+    
+      return { modulos: totalModulos, aulas: totalAulas };
+    }
 
-    return { isAdmin, trail, course, listModulesGroups, redirectToLesson, redirectToCreateModule, redirectToEditModule, countModulesAndLessons };
+    async function deleteLessonsFromModule(idModule: number) {
+      await supabase
+        .from("aula")
+        .delete()
+        .eq("fkModulo", idModule);
+    }
+
+    async function deleteModule(idModule: number) {
+      await deleteLessonsFromModule(idModule);
+      const { error } = await supabase
+        .from("modulo")
+        .delete()
+        .eq("id", idModule);
+
+      if(!error) {
+        router.reload();
+      }
+    } 
+
+  return { isAdmin, trail, course, listModulesGroups, redirectToLesson, redirectToCreateModule, redirectToEditModule, countModulesAndLessons, deleteModule };
 }

@@ -77,7 +77,9 @@ export default function useManageModule() {
 
       if(data) {
         await editLessons();
-        router.push(`/lessons/${data[0].fkCurso}`);
+        setTimeout(() => {
+          router.push(`/lessons/${data[0].fkCurso}`);
+        }, 3000)
       }
 
   }
@@ -105,7 +107,9 @@ export default function useManageModule() {
       if(data) {
         console.log(data);
         await createLessons(data[0].id);
-        router.push(`/lessons/${idCourse}`)
+        setTimeout(() => {
+          router.push(`/lessons/${idCourse}`);
+        }, 3000);
       }
   }
 
