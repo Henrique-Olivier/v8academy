@@ -14,7 +14,11 @@ export default function useManageModule() {
   const [show, setShow] = useState(false);
   const [titleModal, setTitleModal] = useState("Criar Aula");
   const [listLessons, setListLessons] = useState<Lesson[]>([]);
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    setInputLessonTitle("");
+    setInputLessonUrl("");
+  };
   const handleShow = () => setShow(true);
   const [inputLessonTitle, setInputLessonTitle] = useState('');
   const [inputLessonUrl, setInputLessonUrl] = useState('');
@@ -136,7 +140,7 @@ export default function useManageModule() {
         })
 
         if(!error) {
-          showNotification("Modulo e aulas criados com sucesso!", 3000, "success");
+          showNotification("Modulo e aulas salvos com sucesso!", 3000, "success");
         }
     })
   }
@@ -147,6 +151,10 @@ export default function useManageModule() {
     } else if(pathUrl === "edit") {
       await editModule();
     }
+  }
+
+  function removeFromList(titulo: string, url: string) {
+    setListLessons(listLessons.filter(lesson => lesson.titulo !== titulo && lesson.url !== url));
   }
 
   return {
@@ -183,6 +191,7 @@ export default function useManageModule() {
       },
       message: toastMessage,
       type: toastType
-    }
+    },
+    removeFromList
   }
 }

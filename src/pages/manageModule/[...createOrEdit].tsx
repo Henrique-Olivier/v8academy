@@ -10,14 +10,14 @@ export default function ManageModule() {
     return null;
   }
 
-  const { titlePage, inputModule, lessons, modal, saveModule, toast } = manageModuleData;
+  const { titlePage, inputModule, lessons, modal, saveModule, toast, removeFromList } = manageModuleData;
 
   function showLessons() {
     return lessons.listLessons.map(item => (
       <tr>
         <td>{item.titulo}</td>
         <td>
-          <Button variant="danger">Excluir</Button>
+          <Button variant="danger" onClick={() => removeFromList(item.titulo, item.url)}>Excluir</Button>
         </td>
       </tr>
     ))
