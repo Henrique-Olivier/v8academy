@@ -10,13 +10,14 @@ export default function ManageModule() {
     return null;
   }
 
-  const { titlePage, inputModule, lessons, modal, saveModule, toast, removeFromList } = manageModuleData;
+  const { titlePage, inputModule, lessons, modal, saveModule, toast, removeFromList, editLessonFromList } = manageModuleData;
 
   function showLessons() {
     return lessons.listLessons.map(item => (
       <tr>
         <td>{item.titulo}</td>
         <td>
+          <Button className="btn-edit" variant="primary" onClick={() => editLessonFromList(item.titulo, item.url)}>Editar</Button>
           <Button variant="danger" onClick={() => removeFromList(item.titulo, item.url)}>Excluir</Button>
         </td>
       </tr>
@@ -93,7 +94,7 @@ export default function ManageModule() {
                           Fechar
                       </Button>
                       <Button variant="primary" onClick={() => lessons.add(modal.input.title.value, modal.input.url.value)}>
-                        Adicionar
+                        {modal.textButton}
                       </Button>
                   </Modal.Footer>
               </Modal>

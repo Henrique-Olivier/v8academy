@@ -32,4 +32,8 @@ export const FormContainer = styled.div`
       font-size: 18px;
     }
   }
+
+  button.btn-edit{
+    margin-right: 10px;
+  }
 `;

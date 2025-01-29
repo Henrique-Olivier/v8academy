@@ -12,6 +12,7 @@ export default function useManageModule() {
   const [inputModuleTitle, setInputModuleTitle] = useState("");
 
   const [show, setShow] = useState(false);
+  const [textButton, setTextButton] = useState("Adicionar");
   const [titleModal, setTitleModal] = useState("Criar Aula");
   const [listLessons, setListLessons] = useState<Lesson[]>([]);
   const handleClose = () => {
@@ -19,9 +20,14 @@ export default function useManageModule() {
     setInputLessonTitle("");
     setInputLessonUrl("");
   };
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    setShow(true);
+    setTextButton("Adicionar");
+    setTitleModal("Criar aula")
+  }
   const [inputLessonTitle, setInputLessonTitle] = useState('');
   const [inputLessonUrl, setInputLessonUrl] = useState('');
+  const [lessonToEdit, setLessonToEdit] = useState<Lesson>({titulo: "", url: ""});
 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -69,7 +75,14 @@ export default function useManageModule() {
 
   function handleAdd(title: string, url: string) {
     const urlFormatted = `https://${url}`;
-    const newLesson = {titulo: title, url: urlFormatted}
+    const newLesson = {titulo: title, url: urlFormatted};
+    const listFilteredSame = listLessons.filter(lesson => lesson.titulo === lessonToEdit.titulo && lesson.url === lessonToEdit.url);
+
+    if(listFilteredSame.length > 0) {
+      const listFiltered = listLessons.filter(lesson => lesson.titulo !== lessonToEdit.titulo && lesson.url !== lessonToEdit.url);
+      setListLessons([...listFiltered, newLesson]);
+      return;
+    }
     setListLessons([...listLessons, newLesson]);
   }
 
@@ -158,6 +171,17 @@ export default function useManageModule() {
     setListLessons(listLessons.filter(lesson => lesson.titulo !== titulo && lesson.url !== url));
   }
 
+  function editLessonFromList(titulo: string, url: string) {
+    handleShow();
+    setInputLessonTitle(titulo);
+    setTextButton("Editar");
+    setTitleModal("Editar aula")
+
+    const urlFormatted = url.replace(/https:\/\//, "");
+    setInputLessonUrl(urlFormatted);
+    setLessonToEdit({titulo, url});
+  }
+
   return {
     titlePage,
     lessons: {
@@ -169,6 +193,7 @@ export default function useManageModule() {
       update: setInputModuleTitle
     },
     modal: {
+      textButton,
       titleModal,
       show,
       handleClose,
@@ -193,6 +218,7 @@ export default function useManageModule() {
       message: toastMessage,
       type: toastType
     },
-    removeFromList
+    removeFromList,
+    editLessonFromList
   }
 }
