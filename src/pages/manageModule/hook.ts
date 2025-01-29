@@ -68,8 +68,9 @@ export default function useManageModule() {
   }, [idModule])
 
   function handleAdd(title: string, url: string) {
-    const newLesson = {titulo: title, url}
-    setListLessons([...listLessons, newLesson])
+    const urlFormatted = `https://${url}`;
+    const newLesson = {titulo: title, url: urlFormatted}
+    setListLessons([...listLessons, newLesson]);
   }
 
   async function editModule() {

@@ -52,6 +52,10 @@ export const AccordionContainer = styled.div<{ $admin: boolean }>`
             justify-content: space-between;
             align-items: baseline;
         }
+
+        div.adm-module{
+            justify-content: flex-start;
+        }
     }
 
 `;

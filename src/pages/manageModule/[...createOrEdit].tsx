@@ -75,13 +75,17 @@ export default function ManageModule() {
                     />
 
                     <Form.Label htmlFor="inputPassword5">URL:</Form.Label>
-                    <Form.Control
-                      type="text"
-                      id="inputTUrlLesson"
-                      aria-describedby="urlLessonBlock"
-                      value={modal.input.url.value}
-                      onChange={e => modal.input.url.update(e.target.value)}
-                    />
+                    <InputGroup className="mb-3">
+                      <InputGroup.Text id="basic-addon3">
+                        https://
+                      </InputGroup.Text>
+                      <Form.Control
+                        id="basic-url"
+                        aria-describedby="basic-addon3"
+                        value={modal.input.url.value}
+                        onChange={e => modal.input.url.update(e.target.value)}  
+                      />
+                    </InputGroup>
                   </Modal.Body>
 
                   <Modal.Footer>
