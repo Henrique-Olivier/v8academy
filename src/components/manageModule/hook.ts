@@ -2,6 +2,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Lesson } from "./types";
 import { supabase } from "@/service/supabase";
+import path from "path";
+import { create } from "domain";
 
 export default function useManageModule() {
   const router = useRouter();
@@ -27,30 +29,35 @@ export default function useManageModule() {
   }
   const [inputLessonTitle, setInputLessonTitle] = useState('');
   const [inputLessonUrl, setInputLessonUrl] = useState('');
-  const [lessonToEdit, setLessonToEdit] = useState<Lesson>({titulo: "", url: ""});
+  const [lessonToEdit, setLessonToEdit] = useState<Lesson>({ titulo: "", url: "" });
 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
-
-  if(!createOrEdit) {
-    router.push('/trails');
-    return;
-  }
-
-  const pathUrl = createOrEdit[0];
-  const idCourse = createOrEdit[1];
+  
+  const [pathUrl, setPathUrl] = useState("");
+  const [idCourse, setIdCourse] = useState("");
 
   useEffect(() => {
-    if(pathUrl === "edit") {
+    if (!createOrEdit) {
+      return;
+    }
+
+    setPathUrl(createOrEdit[0]);
+    setIdCourse(createOrEdit[1]);
+  }, [createOrEdit])
+
+
+  useEffect(() => {
+    if (pathUrl && pathUrl === "edit") {
       setTitlePage("Editar modulo");
-      async function getInfosModule(){
+      async function getInfosModule() {
         const { data } = await supabase
           .from("modulo")
           .select("id, titulo")
           .eq("id", idCourse);
-        
-        if(data) {
+
+        if (data) {
           setIdModule(data[0].id);
           setInputModuleTitle(data[0].titulo);
 
@@ -64,21 +71,21 @@ export default function useManageModule() {
           .select("idAula, titulo, url")
           .eq("fkModulo", idModule);
 
-        if(data) {
+        if (data) {
           setListLessons(data);
         }
       }
 
       getInfosModule();
     }
-  }, [idModule])
+  }, [idModule,pathUrl])
 
   function handleAdd(title: string, url: string) {
     const urlFormatted = `https://${url}`;
-    const newLesson = {titulo: title, url: urlFormatted};
+    const newLesson = { titulo: title, url: urlFormatted };
     const listFilteredSame = listLessons.filter(lesson => lesson.titulo === lessonToEdit.titulo && lesson.url === lessonToEdit.url);
 
-    if(listFilteredSame.length > 0) {
+    if (listFilteredSame.length > 0) {
       const listFiltered = listLessons.filter(lesson => lesson.titulo !== lessonToEdit.titulo || lesson.url !== lessonToEdit.url);
 
       setListLessons([...listFiltered, newLesson]);
@@ -90,11 +97,11 @@ export default function useManageModule() {
   async function editModule() {
     const { data } = await supabase
       .from("modulo")
-      .update({titulo: inputModuleTitle})
+      .update({ titulo: inputModuleTitle })
       .eq('id', idModule)
       .select("fkCurso");
 
-    if(data) {
+    if (data) {
       console.log(data);
       await editLessons();
       setTimeout(() => {
@@ -110,43 +117,43 @@ export default function useManageModule() {
       .eq("fkModulo", idModule);
 
     if (data) {
-        // Se não houverem aulas associadas ao módulo, ou se você quiser criar novas aulas
-        if (data.length === 0) {
-            console.log("Não há aulas associadas a este módulo. Criando novas aulas...");
-            await createLessons(idModule);
-        } else {
-            // Se existirem aulas, deleta os comentários e as aulas, antes de recriar
-            for (const item of data) {
-                const { error: deleteCommentsError } = await supabase
-                    .from("comentario")
-                    .delete()
-                    .eq('fkAula', item.idAula);
+      // Se não houverem aulas associadas ao módulo, ou se você quiser criar novas aulas
+      if (data.length === 0) {
+        console.log("Não há aulas associadas a este módulo. Criando novas aulas...");
+        await createLessons(idModule);
+      } else {
+        // Se existirem aulas, deleta os comentários e as aulas, antes de recriar
+        for (const item of data) {
+          const { error: deleteCommentsError } = await supabase
+            .from("comentario")
+            .delete()
+            .eq('fkAula', item.idAula);
 
-                if (deleteCommentsError) {
-                    console.error("Erro ao deletar comentários", deleteCommentsError);
-                    return;
-                }
-            }
-
-            // Deletar as aulas após remover os comentários
-            const { error: deleteLessonsError } = await supabase
-                .from("aula")
-                .delete()
-                .eq('fkModulo', idModule);
-
-            if (deleteLessonsError) {
-                console.error("Erro ao deletar aulas", deleteLessonsError);
-                return;
-            }
-
-            // Agora cria as novas aulas
-            console.log("Deletando aulas antigas e criando novas...");
-            await createLessons(idModule);
+          if (deleteCommentsError) {
+            console.error("Erro ao deletar comentários", deleteCommentsError);
+            return;
+          }
         }
+
+        // Deletar as aulas após remover os comentários
+        const { error: deleteLessonsError } = await supabase
+          .from("aula")
+          .delete()
+          .eq('fkModulo', idModule);
+
+        if (deleteLessonsError) {
+          console.error("Erro ao deletar aulas", deleteLessonsError);
+          return;
+        }
+
+        // Agora cria as novas aulas
+        console.log("Deletando aulas antigas e criando novas...");
+        await createLessons(idModule);
+      }
     }
 
     if (error) {
-        console.error("Erro ao recuperar aulas", error);
+      console.error("Erro ao recuperar aulas", error);
     }
   }
 
@@ -159,13 +166,13 @@ export default function useManageModule() {
       })
       .select("id");
 
-      if(data) {
-        console.log(data);
-        await createLessons(data[0].id);
-        setTimeout(() => {
-          router.push(`/lessons/${idCourse}`);
-        }, 3000);
-      }
+    if (data) {
+      console.log(data);
+      await createLessons(data[0].id);
+      setTimeout(() => {
+        router.push(`/lessons/${idCourse}`);
+      }, 3000);
+    }
   }
 
   function showNotification(message: string, duration: number, type: "error" | "success") {
@@ -192,16 +199,16 @@ export default function useManageModule() {
           fkModulo: idCourseInserted
         })
 
-        if(!error) {
-          showNotification("Modulo e aulas salvos com sucesso!", 3000, "success");
-        }
+      if (!error) {
+        showNotification("Modulo e aulas salvos com sucesso!", 3000, "success");
+      }
     })
   }
 
   async function saveModule() {
-    if(pathUrl === "create") {
+    if (pathUrl === "create") {
       await createModule();
-    } else if(pathUrl === "edit") {
+    } else if (pathUrl === "edit") {
       await editModule();
     }
   }
@@ -218,7 +225,7 @@ export default function useManageModule() {
 
     const urlFormatted = url.replace(/https:\/\//, "");
     setInputLessonUrl(urlFormatted);
-    setLessonToEdit({titulo, url});
+    setLessonToEdit({ titulo, url });
   }
 
   return {
