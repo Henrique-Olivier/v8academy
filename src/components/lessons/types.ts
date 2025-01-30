@@ -1,7 +1,19 @@
+export interface Modules {
+    idModulo: number,
+    modulo: string,
+    aulas: ILessons[]
+}
+
+export interface CountModulesAndLessons {
+    modulos: number,
+    aulas: number
+}
+
 export interface ILessons {
     idAula: number,
     titulo: string,
-    modulo: string
+    idModulo: number,
+    modulo: string,
 }
 
 export interface IGroupLessons {
