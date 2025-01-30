@@ -79,7 +79,8 @@ export default function useManageModule() {
     const listFilteredSame = listLessons.filter(lesson => lesson.titulo === lessonToEdit.titulo && lesson.url === lessonToEdit.url);
 
     if(listFilteredSame.length > 0) {
-      const listFiltered = listLessons.filter(lesson => lesson.titulo !== lessonToEdit.titulo && lesson.url !== lessonToEdit.url);
+      const listFiltered = listLessons.filter(lesson => lesson.titulo !== lessonToEdit.titulo || lesson.url !== lessonToEdit.url);
+
       setListLessons([...listFiltered, newLesson]);
       return;
     }
@@ -93,24 +94,60 @@ export default function useManageModule() {
       .eq('id', idModule)
       .select("fkCurso");
 
-      if(data) {
-        await editLessons();
-        setTimeout(() => {
-          router.push(`/lessons/${data[0].fkCurso}`);
-        }, 3000)
-      }
-
+    if(data) {
+      console.log(data);
+      await editLessons();
+      setTimeout(() => {
+        router.push(`/lessons/${data[0].fkCurso}`);
+      }, 3000);
+    }
   }
 
   async function editLessons() {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("aula")
-      .delete()
-      .eq('fkModulo', idModule)
+      .select("idAula")
+      .eq("fkModulo", idModule);
 
-      if(!error) {
-        await createLessons(idModule);
-      }
+    if (data) {
+        // Se não houverem aulas associadas ao módulo, ou se você quiser criar novas aulas
+        if (data.length === 0) {
+            console.log("Não há aulas associadas a este módulo. Criando novas aulas...");
+            await createLessons(idModule);
+        } else {
+            // Se existirem aulas, deleta os comentários e as aulas, antes de recriar
+            for (const item of data) {
+                const { error: deleteCommentsError } = await supabase
+                    .from("comentario")
+                    .delete()
+                    .eq('fkAula', item.idAula);
+
+                if (deleteCommentsError) {
+                    console.error("Erro ao deletar comentários", deleteCommentsError);
+                    return;
+                }
+            }
+
+            // Deletar as aulas após remover os comentários
+            const { error: deleteLessonsError } = await supabase
+                .from("aula")
+                .delete()
+                .eq('fkModulo', idModule);
+
+            if (deleteLessonsError) {
+                console.error("Erro ao deletar aulas", deleteLessonsError);
+                return;
+            }
+
+            // Agora cria as novas aulas
+            console.log("Deletando aulas antigas e criando novas...");
+            await createLessons(idModule);
+        }
+    }
+
+    if (error) {
+        console.error("Erro ao recuperar aulas", error);
+    }
   }
 
   async function createModule() {
@@ -141,6 +178,8 @@ export default function useManageModule() {
   }
 
   async function createLessons(idCourseInserted: string) {
+    console.log("criando aulas");
+    console.log("no modulo: " + idCourseInserted);
     listLessons.forEach(async (lesson) => {
       const titulo = lesson.titulo;
       const url = lesson.url;

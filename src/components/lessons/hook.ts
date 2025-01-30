@@ -91,10 +91,10 @@ export default function useLessons() {
 
           if(idCourse) {
               const res = await getLessons(idCourse);
-              const resMapping: ILessons[] = res.map(item => {
+              const resMapping: ILessons[] = res.map((item) => {
                   const idAula: number = item.idAula;
                   const titulo: string = item.titulo;
-                  const idModulo = item.modulo.id;
+                  const idModulo = item.modulo.idModulo;
                   const modulo = item.modulo.titulo;
 
                   return {
