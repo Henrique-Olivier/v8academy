@@ -1,6 +1,6 @@
 import Layout from "@/components/Layout";
-import useManageModule from "./hook";
-import { FormContainer, MainLayout } from "./style";
+import useManageModule from "../../components/manageModule/hook";
+import { FormContainer, MainLayout } from "../../components/manageModule/style";
 import { Button, Form, InputGroup, Modal, Table, Toast } from "react-bootstrap";
 
 export default function ManageModule() {
