@@ -6,8 +6,9 @@ height: 100vh;
 display: flex;    
 `
 export const Content = styled.div`
-width: 78%;
+width: 100%;
 height: 100vh;
+overflow-y: auto;
 `
 
 export const SidebarContainer = styled.div`

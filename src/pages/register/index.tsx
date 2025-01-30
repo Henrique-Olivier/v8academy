@@ -101,7 +101,7 @@ export default function Register() {
 
 
         if (data?.user) {
-            const { data: dataProfile, error: errorProfile } = await supabase.from('aluno').insert([
+            const { data: dataProfile, error: errorProfile } = await supabase.from('usuario').insert([
                 { id: data.user.id, nome: name, email, cpf }
             ])
 

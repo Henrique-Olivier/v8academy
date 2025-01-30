@@ -3,9 +3,9 @@ import React from 'react';
 import logo from '../../assets/v8_logo.svg';
 import emailIcon from '../../assets/email_icon.svg';
 import passwordIcon from '../../assets/password_icon.svg';
-import { LoginContainer, MainContainer } from './styles';
+import { LoginContainer, MainContainer } from '../../components/login/styles';
 import Link from 'next/link';
-import useLogin from './hook';
+import useLogin from '../../components/login/hook';
 import { Toast } from 'react-bootstrap';
 
 const Login: React.FC = () => {
@@ -15,26 +15,26 @@ const Login: React.FC = () => {
   return (
     <>
       <div>
-        <Image src={logo} alt='Logo da v8' width={200} height={110}/>
+        <Image src={logo} alt='Logo da v8' width={200} height={110} />
       </div>
       <MainContainer>
-      <Toast
-            onClose={() => toast.show.set(false)}
-            show={toast.show.value}
-            delay={3000}
-            autohide
-            style={{
-                position: 'fixed',
-                top: 20,
-                right: 20,
-                zIndex: 9999,
-            }}
-            bg={toast.type === "success" ? "success" : "danger"}
+        <Toast
+          onClose={() => toast.show.set(false)}
+          show={toast.show.value}
+          delay={3000}
+          autohide
+          style={{
+            position: 'fixed',
+            top: 20,
+            right: 20,
+            zIndex: 9999,
+          }}
+          bg={toast.type === "success" ? "success" : "danger"}
         >
-            <Toast.Header>
-                <strong className="me-auto">{toast.type === "success" ? "Success" : "Error"}</strong>
-            </Toast.Header>
-            <Toast.Body>{toast.message}</Toast.Body>
+          <Toast.Header>
+            <strong className="me-auto">{toast.type === "success" ? "Success" : "Error"}</strong>
+          </Toast.Header>
+          <Toast.Body>{toast.message}</Toast.Body>
         </Toast>
         <LoginContainer>
           <h1>Seja bem-vindo!</h1>
@@ -43,7 +43,7 @@ const Login: React.FC = () => {
           <label htmlFor="email">
             Email:
             <div className="input-group flex-nowrap">
-              <span className="input-group-text" id="addon-wrapping"><Image src={emailIcon} width={24} height={20} alt='icone email'/></span>
+              <span className="input-group-text" id="addon-wrapping"><Image src={emailIcon} width={24} height={20} alt='icone email' /></span>
               <input value={inputEmail.value} onChange={e => inputEmail.handle(e.currentTarget.value)} id='email' type="text" className="form-control" placeholder="E-mail" aria-label="E-mail" aria-describedby="addon-wrapping" />
             </div>
           </label>
@@ -57,7 +57,7 @@ const Login: React.FC = () => {
           </label>
 
           <div className="forgotPassword">
-            <Link href="#">Esqueci minha senha</Link>
+            <Link href="/register">Cadastre-se</Link>
           </div>
 
           <div className="btn-login">

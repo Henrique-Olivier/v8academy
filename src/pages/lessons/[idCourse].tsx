@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import { Accordion, Button, Modal, Toast } from "react-bootstrap";
-import { AccordionContainer, MainContainer } from "./styles";
-import useLessons from "./hook";
+import { AccordionContainer, MainContainer } from "../../components/lessons/styles";
+import useLessons from "../../components/lessons/hook";
 
 export default function Lessons() {
 

@@ -1,5 +1,5 @@
 import { supabase } from "./supabase";
-import { ITrails } from "../pages/trails/types";
+import { ITrails } from "../components/trails/types";
 
 export async function getTrails() {
     const { data } = await supabase.from("trilha").select();
@@ -25,8 +25,12 @@ export async function getLessons(idCourse: string | string[]) {
         .eq('modulo.fkCurso', idCourse)
 
     if(data) {
-        console.log(data)
-        return data
+        const lessons = data.map(item => ({
+            idAula: item.idAula,
+            titulo: item.titulo,
+            modulo: (Array.isArray(item.modulo) ? item.modulo[0] : item.modulo) as { titulo: string }
+        }));
+        return lessons;
     }
 
     return [];
