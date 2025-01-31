@@ -105,6 +105,8 @@ export default function CoursePage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [order, setOrder] = useState(0);
+  const [inputSearch, setInputSearch] = useState('');
+
   const [isModalEdit, setIsModalEdit] = useState(false);
   const [isModalRemove, setIsModalRemove] = useState(false);
   const [idToEdit, setIdToEdit] = useState(0);
@@ -124,6 +126,32 @@ export default function CoursePage() {
     }
 
   }, [idTrail])
+
+  useEffect(() => {
+    if (inputSearch !== '') {
+      filterCourses()
+    } else {
+      if (idTrail == '0') {
+        getAllCourses()
+      } else {
+        getCoursesByTrail()
+      }
+    }
+  }, [inputSearch])
+
+  function filterCourses() {
+    if (inputSearch) {
+      if (idTrail == '0') {
+        const filteredCourses = allCourses.filter(course => course.titulo.toLowerCase().includes(inputSearch.toLowerCase()))
+        setAllCourses(filteredCourses)
+      } else {
+        const filteredCourses = courses.filter(course => course.curso.titulo.toLowerCase().includes(inputSearch.toLowerCase()))
+        setCourses(filteredCourses)
+      }
+    } else {
+      return courses
+    }
+  }
 
   async function authenticate() {
     const userObject = localStorage.getItem("sb-bfogzwmikqkepnhxrjyt-auth-token");
@@ -305,9 +333,6 @@ export default function CoursePage() {
               <Card.Text>
                 {course.descricao}
               </Card.Text>
-              {isAdmin ? <Card.Text>
-                Ordem: {course.order}
-              </Card.Text> : <></>}
             </Card.Body>
             <DivBtn>
               {isAdmin ? <Button variant="primary" onClick={() => {
@@ -497,10 +522,10 @@ export default function CoursePage() {
       closeModalRemove()
       if (idTrail == '0') {
         getAllCourses()
-        showNotification  ("Curso removido com sucesso", 3000, "success");
+        showNotification("Curso removido com sucesso", 3000, "success");
       } else {
         getCoursesByTrail()
-        showNotification  ("Curso removido com sucesso", 3000, "success");
+        showNotification("Curso removido com sucesso", 3000, "success");
       }
 
 
@@ -614,7 +639,7 @@ export default function CoursePage() {
         <InputBox>
           <SearchBar>
             <div className="input-group flex-nowrap">
-              <input type="text" className="form-control" placeholder="Search..." aria-label="Username" aria-describedby="addon-wrapping" />
+              <input value={inputSearch} onChange={e => setInputSearch(e.target.value)} type="text" className="form-control" placeholder="Search..." aria-label="Username" aria-describedby="addon-wrapping" />
               <span className="input-group-text" id="addon-wrapping"><Image src={searchIcon} alt="Icon de procura" /></span>
             </div>
           </SearchBar>
@@ -623,7 +648,10 @@ export default function CoursePage() {
         </InputBox>
 
         <GridCourses>
-          {courses.length > 0 ? showCourses(courses) : showAllCourses(allCourses)}
+          {courses.length > 0 ? showCourses(courses) : allCourses.length > 0 ? showAllCourses(allCourses) : 
+          <div className="alert alert-warning" role="alert">
+            Nenhum curso encontrado
+          </div>}
         </GridCourses>
 
       </ContainerContent>
