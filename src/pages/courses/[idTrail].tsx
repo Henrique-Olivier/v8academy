@@ -197,7 +197,7 @@ export default function CoursePage() {
 
         <GridCourses>
           {courses.length > 0 ? showCourses(courses) : allCourses.length > 0 ? showAllCourses(allCourses) :
-            <div className="alert alert-warning" role="alert">
+            <div className="alert alert-warning w-50" role="alert">
               Nenhum curso encontrado
             </div>}
         </GridCourses>
