@@ -20,15 +20,18 @@ export async function getTrails() {
 }
 
 export async function getLessons(idCourse: string | string[]) {
-    const { data, error } = await supabase.from("aula")
-        .select("idAula, titulo, modulo!inner(titulo)")
+    const { data } = await supabase.from("aula")
+        .select("idAula, titulo, modulo!inner(id, titulo)")
         .eq('modulo.fkCurso', idCourse)
 
     if(data) {
-        const lessons = data.map(item => ({
+        const lessons = data.map((item: { idAula: number, titulo: string, modulo: { id: number, titulo: string } | { id: number, titulo: string }[] }) => ({
             idAula: item.idAula,
             titulo: item.titulo,
-            modulo: (Array.isArray(item.modulo) ? item.modulo[0] : item.modulo) as { titulo: string }
+            modulo: {
+                idModulo: (Array.isArray(item.modulo) ? item.modulo[0].id : item.modulo.id),
+                titulo: (Array.isArray(item.modulo) ? item.modulo[0].titulo : item.modulo.titulo)
+            }
         }));
         return lessons;
     }

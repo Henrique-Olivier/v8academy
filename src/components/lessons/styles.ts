@@ -13,11 +13,17 @@ export const MainContainer = styled.div`
         width: 100%;
         border-bottom: 1px solid #4E4E4E;
     }
+
+    div.adm{
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 30px;
+    }
 `;
 
-export const AccordionContainer = styled.div`
+export const AccordionContainer = styled.div<{ $admin: boolean }>`
     width: 100%;
-    margin-top: 30px;
+    margin-top: ${props => props.$admin ? "10px" : "30px"};
 
     div.infos{
         padding: 16px 20px;
@@ -45,6 +51,10 @@ export const AccordionContainer = styled.div`
             display: flex;
             justify-content: space-between;
             align-items: baseline;
+        }
+
+        div.adm-module{
+            justify-content: flex-start;
         }
     }
 
