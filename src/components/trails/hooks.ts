@@ -10,6 +10,8 @@ export default function useTrails() {
     const [header, setHeader] = useState('');
     const [idForDeleteTrail, setIdForDeleteTrail] = useState(0);
     const [listTrails, setListTrails] = useState<ITrails[]>([]);
+    const [inputSearch, setInputSearch] = useState('');
+    const [filteredTrails, setFilteredTrails] = useState<ITrails[]>([]);
 
     async function authenticate() {
         const userObject = localStorage.getItem("sb-bfogzwmikqkepnhxrjyt-auth-token");
@@ -17,13 +19,13 @@ export default function useTrails() {
             const parsedUserObject = JSON.parse(userObject)
             const userId = parsedUserObject.user.id
             const { data, error } = await supabase
-            .from('usuario')
-            .select('*')
-            .eq('id', userId)
-            if(error) {
+                .from('usuario')
+                .select('*')
+                .eq('id', userId)
+            if (error) {
                 return
             }
-            if(data[0].isAdmin) {
+            if (data[0].isAdmin) {
                 setIsAdmin(true);
             } else {
                 setIsAdmin(false)
@@ -38,8 +40,8 @@ export default function useTrails() {
             .from('cursosTrilha')
             .delete()
             .eq('fkTrilha', idForDeleteTrail);
-            
-        if(error) {
+
+        if (error) {
             return false;
         } else {
             return true;
@@ -50,16 +52,16 @@ export default function useTrails() {
 
         const deletedCoursesTrails = await deleteCourseTrails();
 
-        if(deletedCoursesTrails) {
+        if (deletedCoursesTrails) {
             const { error } = await supabase
                 .from('trilha')
                 .delete()
                 .eq('id', idForDeleteTrail);
-    
-            if(error) {
+
+            if (error) {
                 return console.log(error);
             }
-    
+
             router.reload();
             return;
         }
@@ -79,10 +81,45 @@ export default function useTrails() {
         })()
     }, []);
 
+
+
+
+    useEffect(() => {
+        if (inputSearch.length === 0) {
+            (async function () {
+                const res = await getTrails();
+                setListTrails(res);
+            })()
+            return;
+        }
+
+        filterTrails();
+        return;
+    }, [inputSearch]);
+
+    function filterTrails() {
+
+        if (inputSearch === '') {
+            return;
+        }
+
+        const filteredTrails = listTrails.filter(item => {
+            if (item.titulo.toLowerCase().includes(inputSearch.toLowerCase())) {
+                return item;
+            }
+        })
+
+        setListTrails(filteredTrails);
+    }
+
+
     return {
         isAdmin,
         listTrails,
         deleteTrail,
+        inputSearch,
+        setInputSearch,
+        filteredTrails,
         modal: {
             header,
             show: showModal,
@@ -91,4 +128,7 @@ export default function useTrails() {
             edit: editModal,
         }
     }
+
+
+
 }
