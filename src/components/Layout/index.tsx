@@ -2,8 +2,9 @@ import Image from "next/image"
 import styled from "styled-components"
 import Logo from '../../../public/logo.svg'
 import { ReactNode } from 'react';
-import { Container, Content, DivLine, List, ListItem, SidebarContainer,LogoutButton } from './style'
+import { Container, Content, DivLine, List, ListItem, SidebarContainer, LogoutButton } from './style'
 import { useRouter } from "next/router";
+import { CourseProvider } from "@/context/ProviderCourses";
 interface LayoutProps {
     children: ReactNode;
 }

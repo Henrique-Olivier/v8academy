@@ -72,7 +72,6 @@ export default function Trails() {
 
                     {isAdmin ? <Button onClick={() => router.push("manageTrail/add")}>Adicionar</Button> : <></>}
                 </div>
-
                 <div className="cards">
                     {listTrails.length > 0 ? showTrials(listTrails) :
                         <div className="alert alert-warning w-50" role="alert">

@@ -41,13 +41,6 @@ gap: 5px;
 justify-content: space-between;
 `
 
-export const GridCourses = styled.div`
-width: 100%;
-padding: 10px 80px;
-display: grid;
-grid-template-columns: 18rem 18rem 18rem;
-gap: 40px;
-`
 export const DivBtn = styled.div`
 width: 100%;
 padding: 10px 10px;
